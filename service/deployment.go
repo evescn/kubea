@@ -25,7 +25,7 @@ type DeploymentResp struct {
 	Total int                 `json:"total"`
 }
 
-// 定义Deployment创建的结构体
+// DeployCreate 定义 Deployment 创建的结构体
 type DeployCreate struct {
 	Name          string            `json:"name"`
 	Namespace     string            `json:"namespace"`

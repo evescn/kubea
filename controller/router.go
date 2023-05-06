@@ -16,19 +16,67 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 			"data": nil,
 		})
 	}).
-		//pod操作
+		// Pod 操作
 		GET("/api/k8s/pods", Pod.GetPods).
-		GET("/api/k8s/pods/detail", Pod.GetPodDetail).
-		DELETE("/api/k8s/pods", Pod.DeletePod).
-		PUT("/api/k8s/pods", Pod.UpdatePod).
-		GET("/api/k8s/pods/container", Pod.GetPodContainer).
-		GET("/api/k8s/pods/log", Pod.GetPodLog).
-		//deployment操作
-		GET("/api/k8s/deployment", Deployment.GetDeployments).
+		GET("/api/k8s/pod/detail", Pod.GetPodDetail).
+		DELETE("/api/k8s/pod", Pod.DeletePod).
+		PUT("/api/k8s/pod", Pod.UpdatePod).
+		GET("/api/k8s/pod/container", Pod.GetPodContainer).
+		GET("/api/k8s/pod/log", Pod.GetPodLog).
+		// Deployment 操作
+		GET("/api/k8s/deployments", Deployment.GetDeployments).
 		GET("/api/k8s/deployment/detail", Deployment.GetDeploymentDetail).
 		DELETE("/api/k8s/deployment", Deployment.DeleteDeployment).
 		PUT("/api/k8s/deployment", Deployment.UpdateDeployment).
 		PUT("/api/k8s/deployment/scale", Deployment.ScaleDeployment).
 		PUT("/api/k8s/deployment/restart", Deployment.RestartDeployment).
-		PUT("/api/k8s/deployment/create", Deployment.CreateDeployment)
+		POST("/api/k8s/deployment/create", Deployment.CreateDeployment).
+		// DaemonSet 操作
+		GET("/api/k8s/daemonsets", DaemonSet.GetDaemonSets).
+		GET("/api/k8s/daemonset/detail", DaemonSet.GetDaemonSetDetail).
+		DELETE("/api/k8s/daemonset", DaemonSet.DeleteDaemonSet).
+		PUT("/api/k8s/daemonset", DaemonSet.UpdateDaemonSet).
+		// StatefulSet 操作
+		GET("/api/k8s/statefulsets", StatefulSet.GetStatefulSets).
+		GET("/api/k8s/statefulset/detail", StatefulSet.GetStatefulSetDetail).
+		DELETE("/api/k8s/statefulset", StatefulSet.DeleteStatefulSet).
+		PUT("/api/k8s/statefulset", StatefulSet.UpdateStatefulSet).
+		// Service 操作
+		GET("/api/k8s/services", Servicev1.GetServices).
+		GET("/api/k8s/service/detail", Servicev1.GetServiceDetail).
+		DELETE("/api/k8s/service", Servicev1.DeleteService).
+		PUT("/api/k8s/service", Servicev1.UpdateService).
+		POST("/api/k8s/service/create", Servicev1.CreateService).
+		// Ingress 操作
+		GET("/api/k8s/ingresses", Ingress.GetIngresses).
+		GET("/api/k8s/ingress/detail", Ingress.GetIngressDetail).
+		DELETE("/api/k8s/ingress", Ingress.DeleteIngress).
+		PUT("/api/k8s/ingress", Ingress.UpdateIngress).
+		POST("/api/k8s/ingress/create", Ingress.CreateIngress).
+		// Node 操作
+		GET("/api/k8s/nodes", Node.GetNodes).
+		GET("/api/k8s/node/detail", Node.GetNodeDetail).
+		// Namespace 操作
+		GET("/api/k8s/namespaces", Namespace.GetNamespaces).
+		GET("/api/k8s/namespace/detail", Namespace.GetNamespaceDetail).
+		DELETE("/api/k8s/namespace", Namespace.DeleteNamespace).
+		// PV 操作
+		GET("/api/k8s/pvs", Pv.GetPvs).
+		GET("/api/k8s/pv/detail", Pv.GetPvDetail).
+		DELETE("/api/k8s/pv", Pv.DeletePv).
+		// ConfigMap 操作
+		GET("/api/k8s/configmaps", ConfigMap.GetConfigMaps).
+		GET("/api/k8s/configmap/detail", ConfigMap.GetConfigMapDetail).
+		DELETE("/api/k8s/configmap", ConfigMap.DeleteConfigMap).
+		PUT("/api/k8s/configmap", ConfigMap.UpdateConfigMap).
+		// Secret 操作
+		GET("/api/k8s/secrets", Secret.GetSecrets).
+		GET("/api/k8s/secret/detail", Secret.GetSecretDetail).
+		DELETE("/api/k8s/secret", Secret.DeleteSecret).
+		PUT("/api/k8s/secret", Secret.UpdateSecret).
+		// Secret 操作
+		GET("/api/k8s/pvcs", Pvc.GetPvcs).
+		GET("/api/k8s/pvc/detail", Pvc.GetPvcDetail).
+		DELETE("/api/k8s/pvc", Pvc.DeletePvc).
+		PUT("/api/k8s/pvc", Pvc.UpdatePvc)
 }
