@@ -44,6 +44,6 @@ func (k *k8s) Init() {
 		}
 
 		k.ClientMap[key] = clientSet
-		logger.Info(fmt.Sprintf("集群 %s: 创建 K8sClient 成功\n", key))
+		logger.Info(fmt.Sprintf("集群 %s: 创建 K8sClient 成功", key))
 	}
 }

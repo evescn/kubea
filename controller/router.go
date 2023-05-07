@@ -74,9 +74,24 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		GET("/api/k8s/secret/detail", Secret.GetSecretDetail).
 		DELETE("/api/k8s/secret", Secret.DeleteSecret).
 		PUT("/api/k8s/secret", Secret.UpdateSecret).
-		// Secret 操作
+		// PVC 操作
 		GET("/api/k8s/pvcs", Pvc.GetPvcs).
 		GET("/api/k8s/pvc/detail", Pvc.GetPvcDetail).
 		DELETE("/api/k8s/pvc", Pvc.DeletePvc).
-		PUT("/api/k8s/pvc", Pvc.UpdatePvc)
+		PUT("/api/k8s/pvc", Pvc.UpdatePvc).
+		// Event 操作
+		PUT("/api/k8s/events", Event.GetList).
+		// AllRes 操作
+		GET("/api/k8s/allres", AllRes.GetAllNum).
+		//helm应用商店
+		GET("/api/helmstore/releases", HelmStore.ListReleases).
+		GET("/api/helmstore/release/detail", HelmStore.DetailRelease).
+		POST("/api/helmstore/release/install", HelmStore.InstallRelease).
+		DELETE("/api/helmstore/release/uninstall", HelmStore.UninstallRelease).
+		GET("/api/helmstore/charts", HelmStore.ListCharts).
+		POST("/api/helmstore/chart/add", HelmStore.AddChart).
+		PUT("/api/helmstore/chart/update", HelmStore.UpdateChart).
+		DELETE("/api/helmstore/chart/del", HelmStore.DeleteChart).
+		POST("/api/helmstore/chartfile/upload", HelmStore.UploadChartFile).
+		DELETE("/api/helmstore/chartfile/del", HelmStore.DeleteChartFile)
 }

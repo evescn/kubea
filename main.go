@@ -6,6 +6,7 @@ import (
 	"github.com/wonderivan/logger"
 	"kubea-demo/config"
 	"kubea-demo/controller"
+	"kubea-demo/db"
 	"kubea-demo/service"
 	"net/http"
 	"os"
@@ -14,13 +15,24 @@ import (
 )
 
 func main() {
-	//初始化gin对象
+	// 初始化gin对象
 	r := gin.Default()
-	//初始化k8s client
+
+	// 初始化数据库
+	db.Init()
+
+	// 初始化k8s client
 	service.K8s.Init()
-	//初始化路由
+
+	// 初始化路由
 	controller.Router.InitApiRouter(r)
-	//启动gin server
+
+	//启动task
+	go func() {
+		service.Event.WatchEventTask("TST-1")
+	}()
+
+	// 启动gin server
 	srv := &http.Server{
 		Addr:    config.ListenAddr,
 		Handler: r,
@@ -31,19 +43,24 @@ func main() {
 		}
 	}()
 
-	//优雅关闭server
-	//声明一个系统信号的channel，并监听他，如果没有信号，就一直阻塞，如果有，就继续执行
+	// 优雅关闭server
+	// 声明一个系统信号的channel，并监听他，如果没有信号，就一直阻塞，如果有，就继续执行
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 
-	//设置ctx超时时间
+	// 设置ctx超时时间
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	//cancel用于释放ctx
 	defer cancel()
-	//关闭gin
+
+	// 关闭gin
 	if err := srv.Shutdown(ctx); err != nil {
 		logger.Fatal("Gin Server 关闭异常：", err)
 	}
 	logger.Info("Gin Server 退出成功")
+	// 关闭数据库
+	if err := db.Close(); err != nil {
+		logger.Fatal("数据库关闭异常：", err)
+	}
 }
