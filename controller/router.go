@@ -16,6 +16,10 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 			"data": nil,
 		})
 	}).
+		//登录验证
+		POST("/api/login", Login.Auth).
+		//集群
+		GET("/api/k8s/clusters", Cluster.GetClusters).
 		// Pod 操作
 		GET("/api/k8s/pods", Pod.GetPods).
 		GET("/api/k8s/pod/detail", Pod.GetPodDetail).
@@ -83,7 +87,7 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		PUT("/api/k8s/events", Event.GetList).
 		// AllRes 操作
 		GET("/api/k8s/allres", AllRes.GetAllNum).
-		//helm应用商店
+		// Helm 应用商店
 		GET("/api/helmstore/releases", HelmStore.ListReleases).
 		GET("/api/helmstore/release/detail", HelmStore.DetailRelease).
 		POST("/api/helmstore/release/install", HelmStore.InstallRelease).

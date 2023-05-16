@@ -7,6 +7,7 @@ import (
 	"kubea-demo/config"
 	"kubea-demo/controller"
 	"kubea-demo/db"
+	"kubea-demo/middle"
 	"kubea-demo/service"
 	"net/http"
 	"os"
@@ -17,6 +18,10 @@ import (
 func main() {
 	// 初始化gin对象
 	r := gin.Default()
+	// 跨域中间件
+	r.Use(middle.Cors())
+	// JWT登陆验证中间件
+	r.Use(middle.JWTAuth())
 
 	// 初始化数据库
 	db.Init()
@@ -29,7 +34,20 @@ func main() {
 
 	//启动task
 	go func() {
-		service.Event.WatchEventTask("TST-1")
+		service.Event.WatchEventTask("DEV")
+	}()
+
+	// websocket 启动
+	wsHandler := http.NewServeMux()
+	wsHandler.HandleFunc("/ws", service.Terminal.WsHandler)
+	ws := &http.Server{
+		Addr:    config.WsAddr,
+		Handler: wsHandler,
+	}
+	go func() {
+		if err := ws.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Fatal("listen: %s", err)
+		}
 	}()
 
 	// 启动gin server
@@ -39,7 +57,7 @@ func main() {
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Fatal("listen: %s\n", err)
+			logger.Fatal("listen: %s", err)
 		}
 	}()
 
@@ -54,6 +72,11 @@ func main() {
 	//cancel用于释放ctx
 	defer cancel()
 
+	// 关闭 websocket
+	if err := ws.Shutdown(ctx); err != nil {
+		logger.Fatal("Websocket关闭异常:", err)
+	}
+	logger.Info("Websocket退出成功")
 	// 关闭gin
 	if err := srv.Shutdown(ctx); err != nil {
 		logger.Fatal("Gin Server 关闭异常：", err)

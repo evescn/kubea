@@ -3,11 +3,12 @@ package config
 import "time"
 
 const (
+	WsAddr     = "0.0.0.0:8082"
 	ListenAddr = "0.0.0.0:9000"
 	// 1个集群使用为多集群
 	Kubeconfigs = `{
-		"TST-1": "/Users/evescn/Documents/GitHub/kubea-demo/config/config",
-		"TST-2": "/Users/evescn/Documents/GitHub/kubea-demo/config/config"
+		"DEV": "/Users/evescn/Documents/GitHub/kubea-demo/config/config",
+		"TST": "/Users/evescn/Documents/GitHub/kubea-demo/config/config"
 	}`
 	// 查看容器日志时，显示的tail行数 tail -n 5000
 	PodLogTailLine = 2000

@@ -39,7 +39,7 @@ func (n *node) GetNodes(c *gin.Context) {
 		return
 	}
 
-	data, err := service.Node.GetNodes(client, params.FilterName, params.Page, params.Limit)
+	data, err := service.Node.GetNodes(client, params.FilterName, params.Limit, params.Page)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),
