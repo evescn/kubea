@@ -84,7 +84,7 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		DELETE("/api/k8s/pvc", Pvc.DeletePvc).
 		PUT("/api/k8s/pvc", Pvc.UpdatePvc).
 		// Event 操作
-		PUT("/api/k8s/events", Event.GetList).
+		GET("/api/k8s/events", Event.GetList).
 		// AllRes 操作
 		GET("/api/k8s/allres", AllRes.GetAllNum).
 		// Helm 应用商店

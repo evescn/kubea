@@ -11,7 +11,7 @@ var Event event
 
 type event struct{}
 
-// GetList 获取ingress列表，支持过滤、排序、分页
+// GetList 获取 event 列表，支持过滤、排序、分页
 func (*event) GetList(ctx *gin.Context) {
 	params := new(struct {
 		Name    string `form:"name"`
