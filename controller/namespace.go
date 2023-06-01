@@ -39,7 +39,7 @@ func (n *namespace) GetNamespaces(c *gin.Context) {
 		return
 	}
 
-	data, err := service.Namespace.GetNamespaces(client, params.FilterName, params.Page, params.Limit)
+	data, err := service.Namespace.GetNamespaces(client, params.FilterName, params.Limit, params.Page)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),

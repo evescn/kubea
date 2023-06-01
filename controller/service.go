@@ -66,7 +66,7 @@ func (s *servicev1) GetServiceDetail(c *gin.Context) {
 	//client *kubernetes.Clientset, ServiceName, namespace string
 	//接收参数,匿名结构体，get请求为form格式，其他请求为json格式
 	params := new(struct {
-		ServiceName string `form:"service_name"`
+		ServiceName string `form:"svc_name"`
 		Namespace   string `form:"namespace"`
 		Cluster     string `form:"cluster"`
 	})
@@ -113,7 +113,7 @@ func (s *servicev1) DeleteService(c *gin.Context) {
 	//client *kubernetes.Clientset, ServiceName, namespace string
 	//接收参数,匿名结构体，get请求为form格式，其他请求为json格式
 	params := new(struct {
-		ServiceName string `json:"service_name"`
+		ServiceName string `json:"svc_name"`
 		Namespace   string `json:"namespace"`
 		Cluster     string `json:"cluster"`
 	})

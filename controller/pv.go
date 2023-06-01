@@ -39,7 +39,7 @@ func (p *pv) GetPvs(c *gin.Context) {
 		return
 	}
 
-	data, err := service.Pv.GetPvs(client, params.FilterName, params.Page, params.Limit)
+	data, err := service.Pv.GetPvs(client, params.FilterName, params.Limit, params.Page)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),
