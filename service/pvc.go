@@ -84,7 +84,7 @@ func (c *pvc) GetPvcDetail(client *kubernetes.Clientset, pvcName, namespace stri
 
 // DeletePvc 删除 PVC
 func (c *pvc) DeletePvc(client *kubernetes.Clientset, pvcName, namespace string) (err error) {
-	err = client.CoreV1().Secrets(namespace).Delete(context.TODO(), pvcName, metav1.DeleteOptions{})
+	err = client.CoreV1().PersistentVolumeClaims(namespace).Delete(context.TODO(), pvcName, metav1.DeleteOptions{})
 	if err != nil {
 		logger.Error(fmt.Sprintf("删除 PVC 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 PVC 失败, %v\n", err))
