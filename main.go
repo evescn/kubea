@@ -21,7 +21,7 @@ func main() {
 	// 跨域中间件
 	r.Use(middle.Cors())
 	// JWT登陆验证中间件
-	r.Use(middle.JWTAuth())
+	//r.Use(middle.JWTAuth())
 
 	// 初始化数据库
 	db.Init()
