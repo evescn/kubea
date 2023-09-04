@@ -18,6 +18,18 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 	}).
 		//登录验证
 		POST("/api/login", Login.Auth).
+		//应用管理
+		GET("/api/app/list", App.List).
+		GET("/api/app/all", App.GetAll).
+		POST("/api/app/add", App.Add).
+		PUT("/api/app/update", App.Update).
+		DELETE("/api/app/del", App.Delete).
+		//GET("/api/app/alltags", App.GetAllTags).
+		//编排管理
+		GET("/api/orchestration/list", Orchestration.List).
+		POST("/api/orchestration/add", Orchestration.Add).
+		PUT("/api/orchestration/update", Orchestration.Update).
+		DELETE("/api/orchestration/del", Orchestration.Delete).
 		//集群
 		GET("/api/k8s/clusters", Cluster.GetClusters).
 		// Pod 操作
