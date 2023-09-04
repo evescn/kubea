@@ -24,12 +24,16 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		POST("/api/app/add", App.Add).
 		PUT("/api/app/update", App.Update).
 		DELETE("/api/app/del", App.Delete).
-		//GET("/api/app/alltags", App.GetAllTags).
+		GET("/api/app/alltags", App.GetAllTags).
 		//编排管理
 		GET("/api/orchestration/list", Orchestration.List).
 		POST("/api/orchestration/add", Orchestration.Add).
 		PUT("/api/orchestration/update", Orchestration.Update).
 		DELETE("/api/orchestration/del", Orchestration.Delete).
+		//编译记录
+		GET("/api/build/list", Build.List).
+		POST("/api/build/add", Build.Add).
+		PUT("/api/build/update", Build.Update).
 		//集群
 		GET("/api/k8s/clusters", Cluster.GetClusters).
 		// Pod 操作

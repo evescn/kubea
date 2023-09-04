@@ -72,7 +72,42 @@ func (*app) GetAll(c *gin.Context) {
 	})
 }
 
-// 查询所有tag
+// GetAllTags 查询所有tag
+func (*app) GetAllTags(c *gin.Context) {
+	//接收参数
+	params := new(struct {
+		AppId uint `form:"app_id"`
+	})
+
+	//绑定参数
+	if err := c.Bind(params); err != nil {
+		logger.Error("Bind请求参数失败," + err.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"code": 90400,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//调用Service方法
+	data, err := service.App.GetAllTabByApp(params.AppId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 90500,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//返回
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "获取应用Tag列表成功",
+		"data": data,
+	})
+}
 
 // Update 更新
 func (*app) Update(c *gin.Context) {

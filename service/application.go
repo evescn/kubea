@@ -20,7 +20,19 @@ func (*app) GetAll() ([]*model.App, error) {
 	return dao.App.GetAll()
 }
 
-// 查询所有tag
+// GetAllTabByApp 查询所有tag
+func (*app) GetAllTabByApp(appId uint) ([]string, error) {
+	data, has, err := dao.App.Get(appId)
+	if err != nil {
+		return nil, err
+	}
+
+	if !has {
+		return nil, errors.New("该数据不存在")
+	}
+
+	return dao.Build.GetAllTagByRepo(data.RepoName)
+}
 
 // Update 更新
 func (*app) Update(app *model.App) error {
