@@ -34,6 +34,12 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		GET("/api/build/list", Build.List).
 		POST("/api/build/add", Build.Add).
 		PUT("/api/build/update", Build.Update).
+		//部署记录
+		GET("/api/deploy/list", Deploy.List).
+		POST("/api/deploy/add", Deploy.Add).
+		PUT("/api/deploy/update", Deploy.Update).
+		DELETE("/api/deploy/del", Deploy.Delete).
+		GET("/api/deploy/getLog", Deploy.GetLog).
 		//集群
 		GET("/api/k8s/clusters", Cluster.GetClusters).
 		// Pod 操作

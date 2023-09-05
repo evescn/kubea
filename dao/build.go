@@ -27,13 +27,20 @@ func (*build) List(repoName string, page, limit int) (*Builds, error) {
 		total     = 0
 	)
 
-	tx := db.GORM.Model(&model.Build{}).Where("repo_name like ?", "%"+repoName+"%").Count(&total)
+	tx := db.GORM.Model(&model.Build{}).
+		Where("repo_name like ?", "%"+repoName+"%").
+		Count(&total)
 	if tx.Error != nil {
 		logger.Error("获取Build列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Build列表失败," + tx.Error.Error())
 	}
 
-	tx = db.GORM.Model(&model.Build{}).Where("repo_name like ?", "%"+repoName+"%").Limit(limit).Offset(startSet).Order("id desc").Find(&buildList)
+	tx = db.GORM.Model(&model.Build{}).
+		Where("repo_name like ?", "%"+repoName+"%").
+		Limit(limit).
+		Offset(startSet).
+		Order("id desc").
+		Find(&buildList)
 	if tx.Error != nil {
 		logger.Error("获取Build列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Build列表失败," + tx.Error.Error())
