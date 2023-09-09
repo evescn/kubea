@@ -25,15 +25,6 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		PUT("/api/app/update", App.Update).
 		DELETE("/api/app/del", App.Delete).
 		GET("/api/app/alltags", App.GetAllTags).
-		//编排管理
-		GET("/api/orchestration/list", Orchestration.List).
-		POST("/api/orchestration/add", Orchestration.Add).
-		PUT("/api/orchestration/update", Orchestration.Update).
-		DELETE("/api/orchestration/del", Orchestration.Delete).
-		//编译记录
-		GET("/api/build/list", Build.List).
-		POST("/api/build/add", Build.Add).
-		PUT("/api/build/update", Build.Update).
 		//部署记录
 		GET("/api/deploy/list", Deploy.List).
 		POST("/api/deploy/add", Deploy.Add).

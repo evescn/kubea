@@ -72,11 +72,32 @@ func (*app) GetAll(c *gin.Context) {
 	})
 }
 
+// GetAll 获取所有应用
+func (*app) GetRope(c *gin.Context) {
+	//调用Service方法
+	data, err := service.App.GetRepo()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 90500,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//返回
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "获取所有应用信息成功",
+		"data": data,
+	})
+}
+
 // GetAllTags 查询所有tag
-func (*app) GetAllTags(c *gin.Context) {
+func (*app) GetApp(c *gin.Context) {
 	//接收参数
 	params := new(struct {
-		AppId uint `form:"app_id"`
+		RepoName string `form:"repo_name"`
 	})
 
 	//绑定参数
@@ -91,7 +112,7 @@ func (*app) GetAllTags(c *gin.Context) {
 	}
 
 	//调用Service方法
-	data, err := service.App.GetAllTabByApp(params.AppId)
+	data, _, err := service.App.GetApp(params.RepoName)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 90500,

@@ -10,7 +10,7 @@ var App app
 
 type app struct{}
 
-// 列表
+// List 列表
 func (*app) List(appName string, page, limit int) (*dao.Apps, error) {
 	return dao.App.List(appName, page, limit)
 }
@@ -20,18 +20,14 @@ func (*app) GetAll() ([]*model.App, error) {
 	return dao.App.GetAll()
 }
 
-// GetAllTabByApp 查询所有tag
-func (*app) GetAllTabByApp(appId uint) ([]string, error) {
-	data, has, err := dao.App.Get(appId)
-	if err != nil {
-		return nil, err
-	}
+// GetRepo 查询所有仓库信息
+func (*app) GetRepo() ([]string, error) {
+	return dao.App.GetRepo()
+}
 
-	if !has {
-		return nil, errors.New("该数据不存在")
-	}
-
-	return dao.Build.GetAllTagByRepo(data.RepoName)
+// GetByRepo 根据仓库信息查询App信息
+func (*app) GetApp(repoName string) ([]string, bool, error) {
+	return dao.App.GetApp(repoName)
 }
 
 // Update 更新

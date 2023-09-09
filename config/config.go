@@ -16,7 +16,7 @@ const (
 	DbType = "mysql"
 	DbHost = "localhost"
 	DbPort = 3306
-	DbName = "kubea_cicd_demo"
+	DbName = "kubea_cicd"
 	DbUser = "root"
 	DbPwd  = "123456"
 	//打印mysql debug sql日志
@@ -33,14 +33,6 @@ const (
 	AdminPwd  = "123456"
 
 	//cicd
-	//触发tekton ci
-	TektonKubeConfig = "C:\\custom\\project\\config"
-	//CI上传镜像，CD下载镜像
-	RegistryHost = "harbor.dayuan1997.com/adoo_k8s"
-	//部署到的namespace
-	DeployNamespace = "default"
-	//CI使用，git的下载地址
-	GitUrl = "http://192.168.0.14:30180"
 	//编译记录使用
-	TektonUrl = "http://192.168.0.14:32000/#/namespaces/%s/pipelineruns/%s"
+	JenkinsUrl = "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
 )

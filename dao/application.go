@@ -89,10 +89,27 @@ func (*app) GetAll() ([]*model.App, error) {
 	return data, nil
 }
 
-// GetByRepo 根据仓库名查询
-func (*app) GetByRepo(repo string) (*model.App, bool, error) {
-	data := new(model.App)
-	tx := db.GORM.Where("repo_name = ?", repo).First(&data)
+// GetRepo 查询所有Repo
+func (*app) GetRepo() ([]string, error) {
+	data := make([]string, 0)
+	tx := db.GORM.Model(&model.App{}).
+		Select("DISTINCT repo_name").
+		Find(&data)
+	if tx.Error != nil {
+		logger.Error("查询所有Application失败," + tx.Error.Error())
+		return nil, errors.New("查询所有Application失败," + tx.Error.Error())
+	}
+
+	return data, nil
+}
+
+// GetApp 根据仓库名查询所有App
+func (*app) GetApp(repo string) ([]string, bool, error) {
+	data := make([]string, 0)
+	tx := db.GORM.
+		Select("DISTINCT app_name").
+		Where("repo_name = ?", repo).
+		First(&data)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, false, nil
 	}
@@ -151,13 +168,6 @@ func (*app) Delete(id uint) error {
 	if tx.Error != nil {
 		logger.Error("删除Application失败," + tx.Error.Error())
 		return errors.New("删除Application失败," + tx.Error.Error())
-	}
-
-	//关联删除编排记录
-	tx = db.GORM.Model(&model.Orchestration{}).Where("app_id = ?", data.ID).Delete(&model.Orchestration{})
-	if tx.Error != nil {
-		logger.Error("关联删除Orchestration失败," + tx.Error.Error())
-		return errors.New("关联删除Orchestration失败," + tx.Error.Error())
 	}
 
 	return nil
