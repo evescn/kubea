@@ -4,7 +4,7 @@ import "time"
 
 const (
 	WsAddr     = "0.0.0.0:8082"
-	ListenAddr = "0.0.0.0:9000"
+	ListenAddr = "0.0.0.0:9090"
 	// 1个集群使用为多集群
 	Kubeconfigs = `{
 		"DEV": "/Users/evescn/Documents/GitHub/kubea-demo/config/config",
