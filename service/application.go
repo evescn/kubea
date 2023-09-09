@@ -25,9 +25,17 @@ func (*app) GetRepo() ([]string, error) {
 	return dao.App.GetRepo()
 }
 
-// GetByRepo 根据仓库信息查询App信息
-func (*app) GetApp(repoName string) ([]string, bool, error) {
-	return dao.App.GetApp(repoName)
+// GetApp 根据仓库信息查询App信息
+func (*app) GetApp(repoName string) ([]string, error) {
+	data, has, err := dao.App.GetApp(repoName)
+	if err != nil {
+		return nil, err
+	}
+
+	if !has {
+		return nil, errors.New("repo 仓库下没有数据")
+	}
+	return data, nil
 }
 
 // Update 更新

@@ -112,7 +112,7 @@ func (*app) GetApp(c *gin.Context) {
 	}
 
 	//调用Service方法
-	data, _, err := service.App.GetApp(params.RepoName)
+	data, err := service.App.GetApp(params.RepoName)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 90500,
