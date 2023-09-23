@@ -14,7 +14,8 @@ type deploy struct{}
 
 type DeployRes struct {
 	model.Deploy
-	AppName string `json:"app_name"`
+	AppName  string `json:"app_name"`
+	RepoName string `json:"repo_name"`
 }
 
 type Deploys struct {
@@ -23,7 +24,7 @@ type Deploys struct {
 }
 
 // List 列表
-func (*deploy) List(en, appName string, page, limit int) (*Deploys, error) {
+func (*deploy) List(en, appName, repoName string, page, limit int) (*Deploys, error) {
 	startSet := (page - 1) * limit
 
 	var (
@@ -32,9 +33,12 @@ func (*deploy) List(en, appName string, page, limit int) (*Deploys, error) {
 	)
 
 	query := db.GORM.Model(&model.Deploy{}).
-		Select("deploy.*, application.app_name").
+		Select("deploy.*, application.app_name, application.repo_name").
 		Joins("left join application on deploy.app_id = application.id").
 		Where("deploy.en like ?", "%"+en+"%")
+	if repoName != "" {
+		query = query.Where("application.repo_name like ?", "%"+repoName+"%")
+	}
 	if appName != "" {
 		query = query.Where("application.app_name like ?", "%"+appName+"%")
 	}
@@ -87,9 +91,30 @@ func (*deploy) Add(d *model.Deploy) error {
 	return nil
 }
 
+// Has 根据应用名查询，用于代码层去重
+func (*deploy) Has(en string, appId uint) (*model.Deploy, bool, error) {
+	data := new(model.Deploy)
+	tx := db.GORM.Where("en = ? and app_id = ?", en, appId).Order("id desc").First(&data)
+	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return nil, false, nil
+	}
+
+	if tx.Error != nil {
+		logger.Error("根据环境和APPID查询Deploy失败," + tx.Error.Error())
+		return nil, false, errors.New("根据环境和APPID查询Deploy失败," + tx.Error.Error())
+	}
+
+	return data, true, nil
+}
+
 // Update 更新
 func (*deploy) Update(d *model.Deploy) error {
-	tx := db.GORM.Model(&model.Deploy{}).Where("id = ?", d.ID).Updates(&d)
+	tx := db.GORM.Debug().Model(&model.Deploy{}).Where("id = ?", d.ID).Updates(&d)
+	if tx.Error != nil {
+		logger.Error("更新Deploy失败," + tx.Error.Error())
+		return errors.New("更新Deploy失败," + tx.Error.Error())
+	}
+
 	if tx.Error != nil {
 		logger.Error("更新Deploy失败," + tx.Error.Error())
 		return errors.New("更新Deploy失败," + tx.Error.Error())

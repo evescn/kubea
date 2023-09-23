@@ -45,8 +45,23 @@ func (n *namespace) GetNamespaces(client *kubernetes.Clientset, filterName strin
 		logger.Error(fmt.Sprintf("获取 Namespace 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Namespace 列表失败, %v\n", err))
 	}
+	// 返回给客户端的名称空间
+	filterNamespaces := []string{"dev", "d1", "d2", "test", "t1", "t2", "t3"}
+
+	// 创建一个 map 用于快速查找要返回的命名空间
+	filteredNamespaces := make(map[string]bool)
+	for _, name := range filterNamespaces {
+		filteredNamespaces[name] = true
+	}
+	selectedNamespaces := make([]corev1.Namespace, 0)
+	for _, ns := range namespaceList.Items {
+		if filteredNamespaces[ns.Name] {
+			selectedNamespaces = append(selectedNamespaces, ns)
+		}
+	}
+
 	selectableData := &dataSelector{
-		GenericDataList: n.toCells(namespaceList.Items),
+		GenericDataList: n.toCells(selectedNamespaces),
 		dataSelectQuery: &DataSelectQuery{
 			FilterQuery: &FilterQuery{Name: filterName},
 			PaginateQuery: &PaginateQuery{
@@ -64,6 +79,7 @@ func (n *namespace) GetNamespaces(client *kubernetes.Clientset, filterName strin
 	data := filtered.Sort().Paginate()
 	//将[]DataCell类型的Service列表转为v1.Service列表
 	namespaces := n.fromCells(data.GenericDataList)
+
 	return &NamespacesResp{
 		Items: namespaces,
 		Total: total,

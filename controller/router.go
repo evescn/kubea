@@ -20,17 +20,21 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		POST("/api/login", Login.Auth).
 		//应用管理
 		GET("/api/app/list", App.List).
+		GET("/api/app/get", App.Get).
 		GET("/api/app/all", App.GetAll).
 		POST("/api/app/add", App.Add).
 		PUT("/api/app/update", App.Update).
 		DELETE("/api/app/del", App.Delete).
-		GET("/api/app/alltags", App.GetAllTags).
+		GET("/api/app/getApp", App.GetApp).
 		//部署记录
 		GET("/api/deploy/list", Deploy.List).
 		POST("/api/deploy/add", Deploy.Add).
 		PUT("/api/deploy/update", Deploy.Update).
 		DELETE("/api/deploy/del", Deploy.Delete).
 		GET("/api/deploy/getLog", Deploy.GetLog).
+		POST("/api/deploy/cicd", Deploy.CiCd).
+		POST("/api/deploy/jenkniscicd", Deploy.JenkinsCiCd).
+		POST("/api/deploy/updatecicd", Deploy.UpdateCiCd).
 		//集群
 		GET("/api/k8s/clusters", Cluster.GetClusters).
 		// Pod 操作

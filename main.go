@@ -36,6 +36,9 @@ func main() {
 	go func() {
 		service.Event.WatchEventTask("DEV")
 	}()
+	go func() {
+		service.Event.WatchEventTask("TST")
+	}()
 
 	// websocket 启动
 	wsHandler := http.NewServeMux()

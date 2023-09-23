@@ -11,8 +11,21 @@ var App app
 type app struct{}
 
 // List 列表
-func (*app) List(appName string, page, limit int) (*dao.Apps, error) {
-	return dao.App.List(appName, page, limit)
+func (*app) List(appName, repoName string, page, limit int) (*dao.Apps, error) {
+	return dao.App.List(appName, repoName, page, limit)
+}
+
+// Get 查询单个应用信息
+func (*app) Get(repoName, appName string) (*model.App, error) {
+	data, has, err := dao.App.Has(repoName, appName)
+	if err != nil {
+		return nil, err
+	}
+
+	if !has {
+		return nil, errors.New("查询无此应用")
+	}
+	return data, nil
 }
 
 // GetAll 查询所有应用
@@ -20,13 +33,8 @@ func (*app) GetAll() ([]*model.App, error) {
 	return dao.App.GetAll()
 }
 
-// GetRepo 查询所有仓库信息
-func (*app) GetRepo() ([]string, error) {
-	return dao.App.GetRepo()
-}
-
 // GetApp 根据仓库信息查询App信息
-func (*app) GetApp(repoName string) ([]string, error) {
+func (*app) GetApp(repoName string) ([]*model.App, error) {
 	data, has, err := dao.App.GetApp(repoName)
 	if err != nil {
 		return nil, err
@@ -46,7 +54,7 @@ func (*app) Update(app *model.App) error {
 // Add 新增
 func (*app) Add(app *model.App) error {
 	//查看应用名是否存在
-	_, has, err := dao.App.Has(app.AppName)
+	_, has, err := dao.App.Has(app.RepoName, app.AppName)
 	if err != nil {
 		return err
 	}

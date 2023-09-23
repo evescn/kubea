@@ -11,7 +11,8 @@ type Deploy struct {
 	DeletedAt *time.Time `sql:"index"`
 
 	En           string `json:"en"`
-	Tag          string `json:"tag"`
+	Branch       string `json:"branch"`
+	Tag          int    `json:"tag"`
 	Status       int    `json:"status"`
 	StartTime    string `json:"start_time" gorm:"column:start_time"`
 	Duration     string `json:"duration"`

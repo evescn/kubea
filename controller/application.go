@@ -16,9 +16,10 @@ type app struct{}
 func (*app) List(c *gin.Context) {
 	//接收参数
 	params := new(struct {
-		AppName string `form:"app_name"`
-		Page    int    `form:"page"`
-		Limit   int    `form:"limit"`
+		AppName  string `form:"app_name"`
+		RepoName string `form:"repo_name"`
+		Page     int    `form:"page"`
+		Limit    int    `form:"limit"`
 	})
 
 	//绑定参数
@@ -33,7 +34,7 @@ func (*app) List(c *gin.Context) {
 	}
 
 	//调用Service方法
-	data, err := service.App.List(params.AppName, params.Page, params.Limit)
+	data, err := service.App.List(params.AppName, params.RepoName, params.Page, params.Limit)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": 90500,
@@ -47,6 +48,44 @@ func (*app) List(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
 		"msg":  "获取应用列表成功",
+		"data": data,
+	})
+}
+
+// Get 查询指定应用信息
+func (*app) Get(c *gin.Context) {
+	//接收参数
+	params := new(struct {
+		RepoName string `form:"repo_name"`
+		AppName  string `form:"app_name"`
+	})
+
+	//绑定参数
+	if err := c.Bind(params); err != nil {
+		logger.Error("Bind请求参数失败," + err.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"code": 90400,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//调用Service方法
+	data, err := service.App.Get(params.RepoName, params.AppName)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 90500,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//返回
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "获取指定APP信息成功",
 		"data": data,
 	})
 }
@@ -72,28 +111,7 @@ func (*app) GetAll(c *gin.Context) {
 	})
 }
 
-// GetAll 获取所有应用
-func (*app) GetRope(c *gin.Context) {
-	//调用Service方法
-	data, err := service.App.GetRepo()
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": 90500,
-			"msg":  err.Error(),
-			"data": nil,
-		})
-		return
-	}
-
-	//返回
-	c.JSON(http.StatusOK, gin.H{
-		"code": 0,
-		"msg":  "获取所有应用信息成功",
-		"data": data,
-	})
-}
-
-// GetAllTags 查询所有tag
+// GetApp 查询指定仓库下所有应用
 func (*app) GetApp(c *gin.Context) {
 	//接收参数
 	params := new(struct {
@@ -125,7 +143,7 @@ func (*app) GetApp(c *gin.Context) {
 	//返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
-		"msg":  "获取应用Tag列表成功",
+		"msg":  "获取指定仓库APP列表成功",
 		"data": data,
 	})
 }

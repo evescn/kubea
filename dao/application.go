@@ -22,7 +22,7 @@ type Apps struct {
 // appName用于模糊查询，过滤
 // page，limit用于分页
 // 默认desc倒序
-func (*app) List(appName string, page, limit int) (*Apps, error) {
+func (*app) List(appName, repoName string, page, limit int) (*Apps, error) {
 	//计算分页
 	startSet := (page - 1) * limit
 
@@ -34,7 +34,8 @@ func (*app) List(appName string, page, limit int) (*Apps, error) {
 
 	//数据库查询，先查total
 	tx := db.GORM.Model(model.App{}).
-		Where("app_name like ?", "%"+appName+"%").
+		Where("repo_name like ?", "%"+repoName+"%").
+		Where("app_name like ? ", "%"+appName+"%").
 		Count(&total)
 
 	if tx.Error != nil {
@@ -45,10 +46,11 @@ func (*app) List(appName string, page, limit int) (*Apps, error) {
 	//数据库查询，再查数据
 	//当limit=10， total一定是10，因为count会在过滤和分页后执行
 	tx = db.GORM.Model(model.App{}).
+		Where("repo_name like ?", "%"+repoName+"%").
 		Where("app_name like ?", "%"+appName+"%").
 		Limit(limit).
 		Offset(startSet).
-		Order("id desc").
+		Order("app_name").
 		Find(&appList)
 	if tx.Error != nil {
 		logger.Error("获取Application列表失败," + tx.Error.Error())
@@ -89,27 +91,12 @@ func (*app) GetAll() ([]*model.App, error) {
 	return data, nil
 }
 
-// GetRepo 查询所有Repo
-func (*app) GetRepo() ([]string, error) {
-	data := make([]string, 0)
-	tx := db.GORM.Model(&model.App{}).
-		Select("DISTINCT repo_name").
-		Find(&data)
-	if tx.Error != nil {
-		logger.Error("查询所有Application失败," + tx.Error.Error())
-		return nil, errors.New("查询所有Application失败," + tx.Error.Error())
-	}
-
-	return data, nil
-}
-
 // GetApp 根据仓库名查询所有App
-func (*app) GetApp(repo string) ([]string, bool, error) {
-	data := make([]string, 0)
-	tx := db.GORM.
-		Select("DISTINCT app_name").
+func (*app) GetApp(repo string) ([]*model.App, bool, error) {
+	data := make([]*model.App, 0)
+	tx := db.GORM.Model(&model.App{}).
 		Where("repo_name = ?", repo).
-		First(&data)
+		Find(&data)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, false, nil
 	}
@@ -119,13 +106,25 @@ func (*app) GetApp(repo string) ([]string, bool, error) {
 		return nil, false, errors.New("根据仓库名查询Application失败," + tx.Error.Error())
 	}
 
+	//mp := make(map[string]int, 0)
+	//list := make([]string, 0)
+	//for _, val := range data {
+	//	//如果这个map的值为1，则是重复的，直接跳过
+	//	if _, ok := mp[val.AppName]; ok {
+	//		continue
+	//	}
+	//	//如果把tag加入到list中，则做个标记，map的值为1
+	//	list = append(list, val.AppName)
+	//	mp[val.AppName] = 1
+	//}
+
 	return data, true, nil
 }
 
 // Has 根据应用名查询，用于代码层去重
-func (*app) Has(appName string) (*model.App, bool, error) {
+func (*app) Has(repoName, appName string) (*model.App, bool, error) {
 	data := new(model.App)
-	tx := db.GORM.Where("app_name = ?", appName).First(&data)
+	tx := db.GORM.Where("repo_name = ? and app_name = ?", repoName, appName).First(&data)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, false, nil
 	}

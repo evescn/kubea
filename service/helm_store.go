@@ -162,7 +162,7 @@ func (*helmStore) ListCharts(name string, page, limit int) (*dao.Charts, error) 
 
 // DeleteChartFile chart 文件删除
 func (*helmStore) DeleteChartFile(chart string) error {
-	//路径拼接这种写法只支持mac或者linux，如果是windows，则要改成 filePath := config.UploadPath + "\\" + chart
+	//路径拼接这种写法只支持mac或者linux，如果是windows，则要改成 filePath := dev-config.UploadPath + "\\" + chart
 	filePath := config.UploadPath + chart
 	_, err := os.Stat(filePath)
 	if err != nil || os.IsNotExist(err) {
