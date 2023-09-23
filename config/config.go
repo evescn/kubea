@@ -37,6 +37,6 @@ const (
 
 	//cicd
 	//编译记录使用
-	JenkinsUrl   = "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
+	JenkinsUrl   = "https://test-jenkins.evescn.com/view/%s/job/%s/"
 	UserPassword = "admin:11b5ec1e1c83e2647675012d26e1381530"
 )
