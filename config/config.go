@@ -15,13 +15,11 @@ const (
 	PodLogTailLine = 2000
 	//数据库配置
 	DbType = "mysql"
-	//DbHost = "mysql"
-	//DbPort = 3306
-	DbHost = "10.0.0.101"
-	DbPort = 24858
-	DbName = "kubea_cicd"
-	DbUser = "kubea_cicd"
-	DbPwd  = "kubea_cicd12321.."
+	DbHost = "localhost"
+	DbPort = 3306
+	DbName = "kubea_cicd_demo"
+	DbUser = "root"
+	DbPwd  = "123456"
 	//打印mysql debug sql日志
 	LogMode = false
 	//连接池配置
@@ -33,10 +31,10 @@ const (
 
 	//账号密码
 	AdminUser = "admin"
-	AdminPwd  = "admin12321"
+	AdminPwd  = "123456"
 
 	//cicd
 	//编译记录使用
-	JenkinsUrl   = "https://test-jenkins.evescn.com/view/%s/job/%s/"
+	JenkinsUrl   = "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
 	UserPassword = "admin:11b5ec1e1c83e2647675012d26e1381530"
 )
