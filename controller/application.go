@@ -25,7 +25,7 @@ func (*app) List(c *gin.Context) {
 	//绑定参数
 	if err := c.Bind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -33,10 +33,11 @@ func (*app) List(c *gin.Context) {
 		return
 	}
 
+	logger.Info(params)
 	//调用Service方法
 	data, err := service.App.List(params.AppName, params.RepoName, params.Page, params.Limit)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -63,7 +64,7 @@ func (*app) Get(c *gin.Context) {
 	//绑定参数
 	if err := c.Bind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -74,7 +75,7 @@ func (*app) Get(c *gin.Context) {
 	//调用Service方法
 	data, err := service.App.Get(params.RepoName, params.AppName)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -95,7 +96,7 @@ func (*app) GetAll(c *gin.Context) {
 	//调用Service方法
 	data, err := service.App.GetAll()
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -121,7 +122,7 @@ func (*app) GetApp(c *gin.Context) {
 	//绑定参数
 	if err := c.Bind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -132,7 +133,7 @@ func (*app) GetApp(c *gin.Context) {
 	//调用Service方法
 	data, err := service.App.GetApp(params.RepoName)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -156,7 +157,7 @@ func (*app) Update(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -167,7 +168,7 @@ func (*app) Update(c *gin.Context) {
 	//调用Service方法
 	err := service.App.Update(params)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -191,7 +192,7 @@ func (*app) Add(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -202,7 +203,7 @@ func (*app) Add(c *gin.Context) {
 	//调用Service方法
 	err := service.App.Add(params)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -228,7 +229,7 @@ func (*app) Delete(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -239,7 +240,7 @@ func (*app) Delete(c *gin.Context) {
 	//调用Service方法
 	err := service.App.Delete(params.ID)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,

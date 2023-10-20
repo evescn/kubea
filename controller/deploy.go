@@ -26,7 +26,7 @@ func (*deploy) List(c *gin.Context) {
 	//绑定参数
 	if err := c.Bind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -37,7 +37,7 @@ func (*deploy) List(c *gin.Context) {
 	//调用Service方法
 	data, err := service.Deploy.List(params.En, params.AppName, params.RepoName, params.Page, params.Limit)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -61,7 +61,7 @@ func (*deploy) Update(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -72,7 +72,7 @@ func (*deploy) Update(c *gin.Context) {
 	//调用Service方法
 	err := service.Deploy.Update(params)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -96,7 +96,7 @@ func (*deploy) Add(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -107,7 +107,7 @@ func (*deploy) Add(c *gin.Context) {
 	//调用Service方法
 	err := service.Deploy.Add(params)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -133,7 +133,7 @@ func (*deploy) Delete(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -144,7 +144,7 @@ func (*deploy) Delete(c *gin.Context) {
 	//调用Service方法
 	err := service.Deploy.Delete(params.ID)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -168,7 +168,7 @@ func (*deploy) CiCd(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -179,7 +179,7 @@ func (*deploy) CiCd(c *gin.Context) {
 	//调用Service方法
 	err := service.Deploy.CiCd(params)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -208,7 +208,7 @@ func (*deploy) JenkinsCiCd(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("ShouldBind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -219,7 +219,7 @@ func (*deploy) JenkinsCiCd(c *gin.Context) {
 	//调用Service方法
 	err := service.Deploy.JenkinsCiCd(params.AppId, params.En, params.StartTime, params.Builder)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -243,6 +243,7 @@ func (*deploy) UpdateCiCd(c *gin.Context) {
 		AppName      string `json:"app_name"`
 		RepoName     string `json:"repo_name"`
 		Branch       string `json:"branch"`
+		CodeCheck    int    `json:"code_check"`
 		BuildStatus  int    `json:"build_status"`
 		DeployStatus int    `json:"deploy_status"`
 	})
@@ -250,7 +251,7 @@ func (*deploy) UpdateCiCd(c *gin.Context) {
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -259,9 +260,9 @@ func (*deploy) UpdateCiCd(c *gin.Context) {
 	}
 
 	//调用Service方法
-	err := service.Deploy.UpdateCiCd(params.En, params.AppName, params.RepoName, params.Branch, params.BuildStatus, params.DeployStatus)
+	err := service.Deploy.UpdateCiCd(params.En, params.AppName, params.RepoName, params.Branch, params.CodeCheck, params.BuildStatus, params.DeployStatus)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,
@@ -287,7 +288,7 @@ func (*deploy) GetLog(c *gin.Context) {
 	//绑定参数
 	if err := c.Bind(params); err != nil {
 		logger.Error("Bind请求参数失败," + err.Error())
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
 			"data": nil,
@@ -298,7 +299,7 @@ func (*deploy) GetLog(c *gin.Context) {
 	//调用Service方法
 	data, _, err := service.Deploy.GetLog(params.ID)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 90500,
 			"msg":  err.Error(),
 			"data": nil,

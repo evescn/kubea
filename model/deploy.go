@@ -12,6 +12,7 @@ type Deploy struct {
 
 	En           string `json:"en"`
 	Branch       string `json:"branch"`
+	CodeCheck    int    `json:"code_check" gorm:"column:code_check"`
 	Tag          int    `json:"tag"`
 	Status       int    `json:"status"`
 	StartTime    string `json:"start_time" gorm:"column:start_time"`

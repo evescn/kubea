@@ -18,6 +18,10 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 	}).
 		//登录验证
 		POST("/api/login", Login.Auth).
+		//用户管理
+		POST("/api/user/add", User.Add).
+		PUT("/api/user/update", User.Update).
+		DELETE("/api/user/del", User.Delete).
 		//应用管理
 		GET("/api/app/list", App.List).
 		GET("/api/app/get", App.Get).

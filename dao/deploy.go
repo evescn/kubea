@@ -109,7 +109,7 @@ func (*deploy) Has(en string, appId uint) (*model.Deploy, bool, error) {
 
 // Update 更新
 func (*deploy) Update(d *model.Deploy) error {
-	tx := db.GORM.Debug().Model(&model.Deploy{}).Where("id = ?", d.ID).Updates(&d)
+	tx := db.GORM.Model(&model.Deploy{}).Where("id = ?", d.ID).Updates(&d)
 	if tx.Error != nil {
 		logger.Error("更新Deploy失败," + tx.Error.Error())
 		return errors.New("更新Deploy失败," + tx.Error.Error())

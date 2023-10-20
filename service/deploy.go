@@ -112,7 +112,7 @@ func (*deploy) JenkinsCiCd(appId uint, en, startTime, builder string) error {
 }
 
 // UpdateCiCd 更新CiCd流程
-func (*deploy) UpdateCiCd(en, appName, repoName, branch string, buildStatus, deployStatus int) error {
+func (*deploy) UpdateCiCd(en, appName, repoName, branch string, codeCheck, buildStatus, deployStatus int) error {
 	var deplayID uint
 
 	// 使用 en 和 appName 获取数据
@@ -137,6 +137,18 @@ func (*deploy) UpdateCiCd(en, appName, repoName, branch string, buildStatus, dep
 		return errors.New("查询无此应用")
 	}
 
+	// 判断 codeCheck 是否 != 0
+	if codeCheck != 0 {
+		deployData.CodeCheck = codeCheck
+		if codeCheck == 2 {
+			deployData.Status = 4
+			// 部署耗时
+			deployData.Duration = Deploy.getDuration(deployData.StartTime)
+			// 更新日志
+			Deploy.LogInfo(deployData.ID, "代码检查失败！代码 checkout 未通过，当前分支存在未合并代码")
+		}
+	}
+
 	// 判断 buildStatus 是否 == 1
 	if buildStatus == 1 {
 		deployData.BuildStatus = buildStatus
@@ -147,7 +159,7 @@ func (*deploy) UpdateCiCd(en, appName, repoName, branch string, buildStatus, dep
 		deployData.BuildStatus = buildStatus
 		deployData.Status = 4
 		// 部署耗时
-		deployData.Duration = getDuration(deployData.StartTime)
+		deployData.Duration = Deploy.getDuration(deployData.StartTime)
 		// 更新日志
 		Deploy.LogInfo(deployData.ID, "服务编译失败！！！")
 	}
@@ -156,15 +168,16 @@ func (*deploy) UpdateCiCd(en, appName, repoName, branch string, buildStatus, dep
 	if deployStatus == 1 && deployData.Status == 2 {
 		deployData.DeployStatus = deployStatus
 		deployData.Status = 3
+		// 程序启动日志查看
 		// 部署耗时
-		deployData.Duration = getDuration(deployData.StartTime)
+		deployData.Duration = Deploy.getDuration(deployData.StartTime)
 		// 更新日志
 		Deploy.LogInfo(deployData.ID, "服务开始部署！！！")
 	} else if deployStatus == 2 {
 		deployData.DeployStatus = deployStatus
 		deployData.Status = 4
 		// 部署耗时
-		deployData.Duration = getDuration(deployData.StartTime)
+		deployData.Duration = Deploy.getDuration(deployData.StartTime)
 		// 更新日志
 		Deploy.LogInfo(deployData.ID, "服务部署失败！！！")
 	}
@@ -179,7 +192,7 @@ func (*deploy) UpdateCiCd(en, appName, repoName, branch string, buildStatus, dep
 }
 
 // getDuration 获取时间，计算耗时
-func getDuration(startTimeStr string) string {
+func (*deploy) getDuration(startTimeStr string) string {
 	// 解析开始时间
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 
