@@ -17,10 +17,8 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 			"data": nil,
 		})
 	}).
-		//登录验证
+		//登录验证，路由权限信息
 		POST("/api/login", controller.Login.Auth).
-		// 路由，获取权限信息
-		GET("/api/permissions", controller.User.List).
 		// 用户管理
 		GET("/api/user/list", controller.User.List).
 		POST("/api/user/add", controller.User.Add).
@@ -37,7 +35,7 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		POST("/api/url/svc/add", controller.Service.Add).
 		PUT("/api/url/svc/update", controller.Service.Update).
 		DELETE("/api/url/svc/del", controller.Service.Delete).
-		// 权限管理
+		// 角色管理
 		GET("/api/role/list", controller.Roles.List).
 		GET("/api/role/getAll", controller.Roles.GetAll).
 		POST("/api/role/add", controller.Roles.Add).

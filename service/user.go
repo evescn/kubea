@@ -80,6 +80,19 @@ func (*user) Update(username, oldPassword, newPassword string) error {
 	return dao.User.Update(u)
 }
 
+// UpdateAdmin 更新密码
+func (*user) UpdateAdmin(username, newPassword string) error {
+	u := new(model.User)
+	u.UserName = username
+	hashPassword, err := User.HashPassword(newPassword)
+	if err != nil {
+		return err
+	}
+	u.Password = hashPassword
+
+	return dao.User.Update(u)
+}
+
 // Delete 删除
 func (*user) Delete(id uint) error {
 	return dao.User.Delete(id)
@@ -94,7 +107,7 @@ func (*user) UpdateRole(username string, role uint) error {
 		return err
 	}
 	if !has {
-		return errors.New("更新权限失败, 用户错误")
+		return errors.New("更新权限失败, 用户信息错误")
 	}
 
 	u := new(model.User)

@@ -76,7 +76,7 @@ func (*env) Add(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "新增环境成功！",
+		"msg":  "新增环境成功",
 		"data": nil,
 	})
 }
@@ -108,7 +108,7 @@ func (*env) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "更新环境信息成功！",
+		"msg":  "更新环境信息成功",
 		"data": nil,
 	})
 }
@@ -142,7 +142,7 @@ func (*env) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "删除环境成功！",
+		"msg":  "删除环境成功",
 		"data": nil,
 	})
 }

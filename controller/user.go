@@ -124,6 +124,45 @@ func (*user) Update(c *gin.Context) {
 	})
 }
 
+// UpdateAdmin 更新
+func (*user) UpdateAdmin(c *gin.Context) {
+	//接收参数
+	params := new(struct {
+		ID          uint   `json:"id"`
+		UserName    string `json:"username"`
+		NewPassword string `json:"newPassword"`
+	})
+
+	//绑定参数
+	if err := c.ShouldBind(params); err != nil {
+		logger.Error("ShouldBind请求参数失败," + err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": 90400,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//调用Service方法
+	err := service.User.UpdateAdmin(params.UserName, params.NewPassword)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": 90500,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	//返回
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "更新用户信息成功",
+		"data": nil,
+	})
+}
+
 // Delete 删除
 func (*user) Delete(c *gin.Context) {
 	//接收参数

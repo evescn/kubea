@@ -29,7 +29,7 @@ func (*roleMenuRelation) GetAll() ([]*TreeData, error) {
 	var tmpData = make([]*TreeData, 0)
 
 	treeData := &TreeData{
-		Name:     "权限管理分配",
+		Name:     "菜单权限管理",
 		Disabled: true,
 		Children: nil,
 	}

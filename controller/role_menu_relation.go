@@ -11,7 +11,7 @@ var RoleMenuRelation roleMenuRelation
 
 type roleMenuRelation struct{}
 
-// GetAll 返回环境列表
+// GetAll 返回菜单权限列表
 func (*roleMenuRelation) GetAll(c *gin.Context) {
 
 	data, err := service.RoleMenuRelation.GetAll()
@@ -26,12 +26,12 @@ func (*roleMenuRelation) GetAll(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "获取环境列表成功",
+		"msg":  "获取菜单权限列表成功",
 		"data": data,
 	})
 }
 
-// Get 返回环境列表
+// GetPermissions 返回菜单权限列表
 func (*roleMenuRelation) GetPermissions(c *gin.Context) {
 	params := new(struct {
 		RoleID uint `form:"role_id"`
@@ -61,12 +61,12 @@ func (*roleMenuRelation) GetPermissions(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "获取环境列表成功",
+		"msg":  "获取菜单权限列表成功",
 		"data": data,
 	})
 }
 
-//// Add 创建环境
+//// Add 创建菜单权限
 //func (*roleMenuRelation) Add(c *gin.Context) {
 //	params := new(model.RoleMenuRelation)
 //
@@ -93,12 +93,12 @@ func (*roleMenuRelation) GetPermissions(c *gin.Context) {
 //
 //	c.JSON(http.StatusOK, gin.H{
 //		"code": 90200,
-//		"msg":  "新增环境成功！",
+//		"msg":  "新增菜单权限成功！",
 //		"data": nil,
 //	})
 //}
 
-// Update 更新环境
+// Update 更新菜单权限
 func (*roleMenuRelation) Update(c *gin.Context) {
 	params := new(struct {
 		RoleID              uint     `json:"role_id"`
@@ -116,7 +116,7 @@ func (*roleMenuRelation) Update(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	err := service.RoleMenuRelation.Update(params.RoleID, params.NewRoleMenuRelation, params.OldRoleMenuRelation)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -129,12 +129,12 @@ func (*roleMenuRelation) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "更新环境信息成功！",
+		"msg":  "更新菜单权限信息成功！",
 		"data": nil,
 	})
 }
 
-//// Delete 删除环境
+//// Delete 删除菜单权限
 //func (*roleMenuRelation) Delete(c *gin.Context) {
 //	params := new(struct {
 //		ID uint `json:"id"`
@@ -163,7 +163,7 @@ func (*roleMenuRelation) Update(c *gin.Context) {
 //
 //	c.JSON(http.StatusOK, gin.H{
 //		"code": 90200,
-//		"msg":  "删除环境成功！",
+//		"msg":  "删除菜单权限成功！",
 //		"data": nil,
 //	})
 //}

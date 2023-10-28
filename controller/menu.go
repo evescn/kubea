@@ -12,7 +12,7 @@ var Menu menu
 
 type menu struct{}
 
-// List 返回环境列表
+// List 返回1级菜单列表
 func (*menu) List(c *gin.Context) {
 	params := new(struct {
 		MenuName string `form:"menu_name"`
@@ -44,12 +44,12 @@ func (*menu) List(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "获取环境列表成功",
+		"msg":  "获取1级菜单列表成功",
 		"data": data,
 	})
 }
 
-// Add 创建环境
+// Add 创建1级菜单
 func (*menu) Add(c *gin.Context) {
 	params := new(model.Menu)
 
@@ -76,12 +76,12 @@ func (*menu) Add(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "新增环境成功！",
+		"msg":  "新增1级菜单成功",
 		"data": nil,
 	})
 }
 
-// Update 更新环境
+// Update 更新1级菜单
 func (*menu) Update(c *gin.Context) {
 	params := new(model.Menu)
 
@@ -108,12 +108,12 @@ func (*menu) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "更新环境信息成功！",
+		"msg":  "更新1级菜单信息成功",
 		"data": nil,
 	})
 }
 
-// Delete 删除环境
+// Delete 删除1级菜单
 func (*menu) Delete(c *gin.Context) {
 	params := new(struct {
 		ID uint `json:"id"`
@@ -142,7 +142,7 @@ func (*menu) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "删除环境成功！",
+		"msg":  "删除1级菜单成功",
 		"data": nil,
 	})
 }

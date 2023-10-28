@@ -59,7 +59,7 @@ func (*subSubMenu) List(subSubMenuName string, page, limit int) (*SubSubMenus, e
 	}, nil
 }
 
-// Get 根据 roleID 查询，查询账号权限信息
+// Get 根据 roleID 查询，查询3级菜单信息
 func (*subSubMenu) Get(ID uint) (*model.SubSubMenu, bool, error) {
 	data := new(model.SubSubMenu)
 	tx := db.GORM.Where("id = ?", ID).First(&data)
@@ -91,7 +91,7 @@ func (*subSubMenu) GetP(id uint) ([]*model.SubSubMenu, bool, error) {
 	return data, true, nil
 }
 
-// Has 根据路径查询，用于代码层去重，查询账号信息
+// Has 根据路径查询，用于代码层去重，查询3级菜单信息
 func (*subSubMenu) Has(pagePath string) (*model.SubSubMenu, bool, error) {
 	data := new(model.SubSubMenu)
 	tx := db.GORM.Where("path = ?", pagePath).First(&data)

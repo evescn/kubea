@@ -12,7 +12,7 @@ var SubSubMenus subSubMenu
 
 type subSubMenu struct{}
 
-// List 返回环境列表
+// List 返回3级菜单列表
 func (*subSubMenu) List(c *gin.Context) {
 	params := new(struct {
 		SubSubMenuName string `form:"sub_sub_menu_name"`
@@ -44,12 +44,12 @@ func (*subSubMenu) List(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "获取环境列表成功",
+		"msg":  "获取3级菜单列表成功",
 		"data": data,
 	})
 }
 
-// Add 创建环境
+// Add 创建3级菜单
 func (*subSubMenu) Add(c *gin.Context) {
 	params := new(model.SubSubMenu)
 
@@ -76,12 +76,12 @@ func (*subSubMenu) Add(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "新增环境成功！",
+		"msg":  "新增3级菜单成功！",
 		"data": nil,
 	})
 }
 
-// Update 更新环境
+// Update 更新3级菜单
 func (*subSubMenu) Update(c *gin.Context) {
 	params := new(model.SubSubMenu)
 
@@ -108,12 +108,12 @@ func (*subSubMenu) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "更新环境信息成功！",
+		"msg":  "更新3级菜单信息成功！",
 		"data": nil,
 	})
 }
 
-// Delete 删除环境
+// Delete 删除3级菜单
 func (*subSubMenu) Delete(c *gin.Context) {
 	params := new(struct {
 		ID uint `json:"id"`
@@ -142,7 +142,7 @@ func (*subSubMenu) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "删除环境成功！",
+		"msg":  "删除3级菜单成功！",
 		"data": nil,
 	})
 }

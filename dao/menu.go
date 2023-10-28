@@ -59,19 +59,19 @@ func (*menu) List(menuName string, page, limit int) (*Menus, error) {
 	}, nil
 }
 
-// GetAll 查询所有路由权限信息
+// GetAll 查询所有1级菜单信息
 func (*menu) GetAll() ([]*model.Menu, error) {
 	data := make([]*model.Menu, 0)
 	tx := db.GORM.Find(&data)
 	if tx.Error != nil {
-		logger.Error("查询所有Application失败," + tx.Error.Error())
-		return nil, errors.New("查询所有Application失败," + tx.Error.Error())
+		logger.Error("查询所有Menu失败," + tx.Error.Error())
+		return nil, errors.New("查询所有Menu失败," + tx.Error.Error())
 	}
 
 	return data, nil
 }
 
-// Get 根据 ID 查询，查询账号权限信息
+// Get 根据 ID 查询，查询1级菜单信息
 func (*menu) Get(ID uint) (*model.Menu, bool, error) {
 	data := new(model.Menu)
 	tx := db.GORM.Where("id = ?", ID).First(&data)
@@ -87,7 +87,7 @@ func (*menu) Get(ID uint) (*model.Menu, bool, error) {
 	return data, true, nil
 }
 
-// Has 根据路径查询，用于代码层去重，查询账号信息
+// Has 根据路径查询，用于代码层去重，查询1级菜单信息
 func (*menu) Has(pagePath string) (*model.Menu, bool, error) {
 	data := new(model.Menu)
 	tx := db.GORM.Where("path = ?", pagePath).First(&data)

@@ -2,7 +2,6 @@ package dao
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
 	"github.com/wonderivan/logger"
 	"kubea-demo/db"
 	"kubea-demo/model"
@@ -11,11 +10,6 @@ import (
 var RoleMenuRelation roleMenuRelation
 
 type roleMenuRelation struct{}
-
-//type RoleMenuRelations struct {
-//	Items []*model.RoleMenuRelation `json:"items"`
-//	Total int                       `json:"total"`
-//}
 
 // Get 根据 roleID 查询，查询账号权限信息
 func (*roleMenuRelation) Get(roleID uint) ([]*model.RoleMenuRelation, error) {
@@ -33,22 +27,6 @@ func (*roleMenuRelation) Get(roleID uint) ([]*model.RoleMenuRelation, error) {
 	}
 
 	return roleMenuRelationList, nil
-}
-
-// Has 根据用户名查询，用于代码层去重，查询账号信息
-func (*roleMenuRelation) Has(id uint) (*model.RoleMenuRelation, bool, error) {
-	data := new(model.RoleMenuRelation)
-	tx := db.GORM.Where("id = ?", id).First(&data)
-	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-		return nil, false, nil
-	}
-
-	if tx.Error != nil {
-		logger.Error("根据用户名查询RoleMenuRelation失败," + tx.Error.Error())
-		return nil, false, errors.New("根据用户名查询RoleMenuRelation失败," + tx.Error.Error())
-	}
-
-	return data, true, nil
 }
 
 // Add 新增

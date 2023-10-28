@@ -13,12 +13,13 @@ type service struct{}
 
 // List 返回环境列表
 func (*service) List(userName, serviceName string, role, eid uint, page, limit int) (*dao.Services, error) {
-	// 判断用户权限
+	// 判断用户权限，确实是否返回账户名密码信息
 	data, has, err := dao.User.Has(userName)
 	if err != nil {
 		return nil, err
 	}
 
+	// 超级管理员
 	if !has {
 		return dao.Service.List(serviceName, eid, page, limit)
 	}
@@ -30,10 +31,11 @@ func (*service) List(userName, serviceName string, role, eid uint, page, limit i
 
 	roleData, has, err := dao.Role.Get(role)
 	if !has {
-		logger.Error("当前用户信息不存在，")
-		return nil, errors.New("当前用户信息不存在")
+		logger.Error("当前角色信息不存在，")
+		return nil, errors.New("当前角色信息不存在")
 	}
 
+	// 运维用户也返回账户名密码信息
 	if roleData.RoleName == "运维用户" {
 		return dao.Service.List(serviceName, eid, page, limit)
 	}

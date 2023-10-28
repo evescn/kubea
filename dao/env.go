@@ -46,7 +46,7 @@ func (*env) List(envName string, page, limit int) (*Envs, error) {
 		Where("name like ?", "%"+envName+"%").
 		Limit(limit).
 		Offset(startSet).
-		Order("name").
+		Order("id").
 		Find(&envList)
 	if tx.Error != nil {
 		logger.Error("获取Env列表失败," + tx.Error.Error())

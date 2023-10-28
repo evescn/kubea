@@ -79,7 +79,7 @@ func (*svc) Add(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "新增URL成功！",
+		"msg":  "新增URL信息成功",
 		"data": nil,
 	})
 }
@@ -111,7 +111,7 @@ func (*svc) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "更新URL信息成功！",
+		"msg":  "更新URL信息成功",
 		"data": nil,
 	})
 }
@@ -146,7 +146,7 @@ func (*svc) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "删除URL成功！",
+		"msg":  "删除URL成功",
 		"data": nil,
 	})
 }

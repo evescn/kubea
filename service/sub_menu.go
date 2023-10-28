@@ -11,7 +11,7 @@ var SubMenu subMenu
 
 type subMenu struct{}
 
-// List 返回环境列表
+// List 返回2级菜单列表
 func (*subMenu) List(subMenuName string, page, limit int) (*dao.SubMenus, error) {
 	return dao.SubMenu.List(subMenuName, page, limit)
 }
@@ -21,17 +21,17 @@ func (*subMenu) Get(ID uint) (*model.SubMenu, bool, error) {
 	return dao.SubMenu.Get(ID)
 }
 
-// Add 创建环境
+// Add 创建2级菜单
 func (*subMenu) Add(m *model.SubMenu) error {
-	// 判断环境是否存在
+	// 判断2级菜单是否存在
 	_, has, err := dao.SubMenu.Has(m.Path)
 	if err != nil {
 		return err
 	}
 
 	if has {
-		logger.Error("当前数据已存在，请重新创建")
-		return errors.New("当前数据已存在，请重新创建")
+		logger.Error("当前2级菜单数据已存在，请重新创建")
+		return errors.New("当前2级菜单数据已存在，请重新创建")
 	}
 
 	// 不存在则创建数据
@@ -42,12 +42,12 @@ func (*subMenu) Add(m *model.SubMenu) error {
 	return nil
 }
 
-// Update 更新环境
+// Update 更新2级菜单
 func (*subMenu) Update(m *model.SubMenu) error {
 	return dao.SubMenu.Update(m)
 }
 
-// Delete 删除环境
+// Delete 删除2级菜单
 func (*subMenu) Delete(ID uint) error {
 	_, has, err := dao.SubSubMenu.GetP(ID)
 	if err != nil {
@@ -55,8 +55,8 @@ func (*subMenu) Delete(ID uint) error {
 	}
 
 	if has {
-		logger.Error("当前页面关联子页面信息，请先删除关联信息")
-		return errors.New("当前页面关联子页面信息，请先删除关联信息")
+		logger.Error("当前2级菜单页面关联子页面信息，请先删除关联信息")
+		return errors.New("当前2级菜单页面关联子页面信息，请先删除关联信息")
 	}
 
 	return dao.SubMenu.Delete(ID)

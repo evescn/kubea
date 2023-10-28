@@ -44,12 +44,12 @@ func (*role) List(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 90200,
-		"msg":  "获取用户列表成功",
+		"msg":  "获取角色列表成功",
 		"data": data,
 	})
 }
 
-// GetAll 所有
+// GetAll 所有角色信息，列表展示，新增用户获取角色数据
 func (*role) GetAll(c *gin.Context) {
 
 	//调用Service方法
@@ -66,7 +66,7 @@ func (*role) GetAll(c *gin.Context) {
 	//返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
-		"msg":  "获取 role 信息成功",
+		"msg":  "获取所有角色信息成功",
 		"data": data,
 	})
 }
@@ -101,7 +101,7 @@ func (*role) Add(c *gin.Context) {
 	//返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
-		"msg":  "新增用户成功",
+		"msg":  "新增角色信息成功",
 		"data": nil,
 	})
 }
@@ -136,7 +136,7 @@ func (*role) Update(c *gin.Context) {
 	//返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
-		"msg":  "更新用户信息成功",
+		"msg":  "更新角色信息成功",
 		"data": nil,
 	})
 }
@@ -173,7 +173,7 @@ func (*role) Delete(c *gin.Context) {
 	//返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,
-		"msg":  "删除用户成功",
+		"msg":  "删除角色信息成功",
 		"data": nil,
 	})
 }

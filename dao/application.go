@@ -106,18 +106,6 @@ func (*app) GetApp(repo string) ([]*model.App, bool, error) {
 		return nil, false, errors.New("根据仓库名查询Application失败," + tx.Error.Error())
 	}
 
-	//mp := make(map[string]int, 0)
-	//list := make([]string, 0)
-	//for _, val := range data {
-	//	//如果这个map的值为1，则是重复的，直接跳过
-	//	if _, ok := mp[val.AppName]; ok {
-	//		continue
-	//	}
-	//	//如果把tag加入到list中，则做个标记，map的值为1
-	//	list = append(list, val.AppName)
-	//	mp[val.AppName] = 1
-	//}
-
 	return data, true, nil
 }
 
