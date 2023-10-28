@@ -6,8 +6,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 	"time"
 )
 

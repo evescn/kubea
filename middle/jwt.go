@@ -3,7 +3,7 @@ package middle
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"kubea-demo/utils"
+	"kubea/utils"
 	"net/http"
 )
 

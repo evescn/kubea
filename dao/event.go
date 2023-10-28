@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/wonderivan/logger"
-	"kubea-demo/db"
-	"kubea-demo/model"
+	"kubea/db"
+	"kubea/model"
 	"time"
 )
 

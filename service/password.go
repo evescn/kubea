@@ -1,8 +1,8 @@
 package service
 
 import (
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 )
 
 var Password password

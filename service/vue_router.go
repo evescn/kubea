@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/wonderivan/logger"
-	"kubea-demo/dao"
+	"kubea/dao"
 )
 
 var VueRouter vueRouter

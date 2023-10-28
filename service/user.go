@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"golang.org/x/crypto/bcrypt"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 )
 
 var User user

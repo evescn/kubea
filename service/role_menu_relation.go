@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 	"strconv"
 	"strings"
 )

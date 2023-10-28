@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 )
 
 var App app

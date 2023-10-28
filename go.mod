@@ -1,4 +1,4 @@
-module kubea-demo
+module kubea
 
 go 1.20
 

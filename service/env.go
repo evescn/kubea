@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"github.com/wonderivan/logger"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/dao"
+	"kubea/model"
 )
 
 var Env env

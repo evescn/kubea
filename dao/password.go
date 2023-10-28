@@ -3,8 +3,8 @@ package dao
 import (
 	"errors"
 	"github.com/wonderivan/logger"
-	"kubea-demo/db"
-	"kubea-demo/model"
+	"kubea/db"
+	"kubea/model"
 )
 
 var Password password

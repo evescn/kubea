@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"github.com/wonderivan/logger"
-	"kubea-demo/config"
-	"kubea-demo/dao"
-	"kubea-demo/model"
+	"kubea/config"
+	"kubea/dao"
+	"kubea/model"
 )
 
 var Login login

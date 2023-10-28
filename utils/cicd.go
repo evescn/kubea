@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/wonderivan/logger"
 	"io"
-	"kubea-demo/config"
+	"kubea/config"
 	"net/http"
 	"strings"
 )

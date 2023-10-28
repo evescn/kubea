@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"kubea-demo/controller"
+	"kubea/controller"
 	"net/http"
 )
 

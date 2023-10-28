@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"kubea-demo/service"
+	"kubea/service"
 	"net/http"
 	"sort"
 )

@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
-	"kubea-demo/dao"
-	"kubea-demo/service"
+	"kubea/dao"
+	"kubea/service"
 	"net/http"
 )
 

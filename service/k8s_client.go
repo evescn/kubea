@@ -7,7 +7,7 @@ import (
 	"github.com/wonderivan/logger"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"kubea-demo/config"
+	"kubea/config"
 )
 
 var K8s k8s

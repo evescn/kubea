@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/wonderivan/logger"
-	"kubea-demo/config"
-	"kubea-demo/model"
+	"kubea/config"
+	"kubea/model"
 )
 
 var (

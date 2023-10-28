@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/wonderivan/logger"
-	"kubea-demo/config"
-	"kubea-demo/dao"
-	"kubea-demo/model"
-	"kubea-demo/utils"
+	"kubea/config"
+	"kubea/dao"
+	"kubea/model"
+	"kubea/utils"
 	"time"
 )
 
