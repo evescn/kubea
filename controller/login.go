@@ -25,7 +25,18 @@ func (*login) Auth(c *gin.Context) {
 		return
 	}
 
-	err := service.Login.Auth(params.UserName, params.Password)
+	data, err := service.Login.Auth(params.UserName, params.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+
+	// 调用页面接口
+	router, err := service.VueRouter.SetRouter(data.Role)
+	//logger.Info(router)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),
@@ -36,6 +47,7 @@ func (*login) Auth(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"msg":  "登录成功",
-		"data": nil,
+		"data": router,
+		"role": data.Role,
 	})
 }

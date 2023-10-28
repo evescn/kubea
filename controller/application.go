@@ -33,7 +33,6 @@ func (*app) List(c *gin.Context) {
 		return
 	}
 
-	logger.Info(params)
 	//调用Service方法
 	data, err := service.App.List(params.AppName, params.RepoName, params.Page, params.Limit)
 	if err != nil {

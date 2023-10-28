@@ -187,6 +187,11 @@ func (*deploy) UpdateCiCd(en, appName, repoName, branch string, codeCheck, build
 		deployData.Branch = branch
 	}
 
+	// 更新 Tag 信息
+	if len(branch) > 0 {
+		deployData.Branch = branch
+	}
+
 	// 更新服务
 	return dao.Deploy.Update(deployData)
 }

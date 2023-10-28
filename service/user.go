@@ -12,7 +12,7 @@ var User user
 type user struct{}
 
 // HashPassword 密码加密 在创建或更新用户时，对密码进行哈希
-func (u *user) HashPassword(password string) (string, error) {
+func (*user) HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -21,12 +21,17 @@ func (u *user) HashPassword(password string) (string, error) {
 }
 
 // VerifyPassword 用户登录验证密码
-func (u *user) VerifyPassword(db, password string) (bool, error) {
+func (*user) VerifyPassword(db, password string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(db), []byte(password))
 	if err != nil {
 		return false, errors.New("用户名或密码错误")
 	}
 	return true, nil
+}
+
+// List 返回用户列表
+func (*user) List(userName string, page, limit int) (*dao.Users, error) {
+	return dao.User.List(userName, page, limit)
 }
 
 // Add 新增
@@ -51,7 +56,7 @@ func (*user) Add(u *model.User) error {
 	return dao.User.Add(u)
 }
 
-// Update 更新
+// Update 更新密码
 func (*user) Update(username, oldPassword, newPassword string) error {
 
 	data, has, err := dao.User.Has(username)
@@ -78,4 +83,23 @@ func (*user) Update(username, oldPassword, newPassword string) error {
 // Delete 删除
 func (*user) Delete(id uint) error {
 	return dao.User.Delete(id)
+}
+
+// UpdateRole 更新用户权限
+func (*user) UpdateRole(username string, role uint) error {
+
+	_, has, err := dao.User.Has(username)
+
+	if err != nil {
+		return err
+	}
+	if !has {
+		return errors.New("更新权限失败, 用户错误")
+	}
+
+	u := new(model.User)
+	u.UserName = username
+	u.Role = role
+
+	return dao.User.Update(u)
 }

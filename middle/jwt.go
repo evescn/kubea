@@ -1,6 +1,7 @@
 package middle
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"kubea-demo/utils"
 	"net/http"
@@ -8,7 +9,17 @@ import (
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		//if len(c.Request.URL.String()) >= 10 {
+		fmt.Println(c.Request.URL.String())
 		if len(c.Request.URL.String()) >= 10 && c.Request.URL.String()[0:10] == "/api/login" {
+			c.Next()
+		} else if len(c.Request.URL.String()) >= 12 && c.Request.URL.String()[0:12] == "/api/app/get" {
+			c.Next()
+		} else if len(c.Request.URL.String()) >= 15 && c.Request.URL.String()[0:15] == "/api/deploy/add" {
+			c.Next()
+		} else if len(c.Request.URL.String()) >= 23 && c.Request.URL.String()[0:23] == "/api/deploy/jenkniscicd" {
+			c.Next()
+		} else if len(c.Request.URL.String()) >= 22 && c.Request.URL.String()[0:22] == "/api/deploy/updatecicd" {
 			c.Next()
 		} else {
 			token := c.Request.Header.Get("Authorization")
