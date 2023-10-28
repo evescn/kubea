@@ -1,0 +1,24 @@
+# 使用 Go 1.20.3 作为构建环境
+FROM golang:1.20.3 as builder
+
+WORKDIR /app
+
+# 将本地文件复制到容器中
+COPY . .
+
+# 使用 go mod tidy 来更新依赖关系
+RUN go mod tidy
+
+# 构建应用程序，这里无需设置 CGO_ENABLED=0
+RUN GOOS=linux go build -o app .
+
+# 使用轻量级的 Alpine Linux 作为最终容器
+FROM alpine:3.16.0
+
+WORKDIR /app
+
+# 复制构建环境中的二进制文件到最终容器中
+COPY --from=builder /app/app .
+
+# 定义启动命令，将输出重定向到日志文件
+CMD ["./app", ">>", "/app/log/stdout.log", "2>&1"]

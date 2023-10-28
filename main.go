@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 	"kubea-demo/config"
-	"kubea-demo/controller"
 	"kubea-demo/db"
 	"kubea-demo/middle"
+	"kubea-demo/routers"
 	"kubea-demo/service"
 	"net/http"
 	"os"
@@ -21,7 +21,7 @@ func main() {
 	// 跨域中间件
 	r.Use(middle.Cors())
 	// JWT登陆验证中间件
-	//r.Use(middle.JWTAuth())
+	r.Use(middle.JWTAuth())
 
 	// 初始化数据库
 	db.Init()
@@ -30,11 +30,14 @@ func main() {
 	service.K8s.Init()
 
 	// 初始化路由
-	controller.Router.InitApiRouter(r)
+	routers.Router.InitApiRouter(r)
 
 	//启动task
 	go func() {
 		service.Event.WatchEventTask("DEV")
+	}()
+	go func() {
+		service.Event.WatchEventTask("TST")
 	}()
 
 	// websocket 启动

@@ -7,16 +7,18 @@ const (
 	ListenAddr = "0.0.0.0:9000"
 	// 1个集群使用为多集群
 	Kubeconfigs = `{
-		"DEV": "/Users/evescn/Documents/GitHub/kubea-demo/config/config",
-		"TST": "/Users/evescn/Documents/GitHub/kubea-demo/config/config"
+		"DEV": "./config/dev-config",
+		"TST": "./config/test-config"
 	}`
+
 	// 查看容器日志时，显示的tail行数 tail -n 5000
 	PodLogTailLine = 2000
 	//数据库配置
 	DbType = "mysql"
 	DbHost = "localhost"
 	DbPort = 3306
-	DbName = "kubea_cicd_demo"
+	//DbName = "kubea_cicd_demo"
+	DbName = "kubea_cicd"
 	DbUser = "root"
 	DbPwd  = "123456"
 	//打印mysql debug sql日志
@@ -33,14 +35,7 @@ const (
 	AdminPwd  = "123456"
 
 	//cicd
-	//触发tekton ci
-	TektonKubeConfig = "C:\\custom\\project\\config"
-	//CI上传镜像，CD下载镜像
-	RegistryHost = "harbor.dayuan1997.com/adoo_k8s"
-	//部署到的namespace
-	DeployNamespace = "default"
-	//CI使用，git的下载地址
-	GitUrl = "http://192.168.0.14:30180"
 	//编译记录使用
-	TektonUrl = "http://192.168.0.14:32000/#/namespaces/%s/pipelineruns/%s"
+	JenkinsUrl   = "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
+	UserPassword = "admin:11b5ec1e1c83e2647675012d26e1381530"
 )

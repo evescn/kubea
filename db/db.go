@@ -40,7 +40,22 @@ func Init() {
 	GORM.DB().SetConnMaxLifetime(config.MaxLifeTime)
 
 	//isInit = true
-	GORM.AutoMigrate(model.App{}, model.Build{}, model.Chart{}, model.Deploy{}, model.DeployLog{}, model.Event{}, model.Orchestration{})
+	GORM.AutoMigrate(
+		model.App{},
+		model.Chart{},
+		model.Deploy{},
+		model.DeployLog{},
+		model.Event{},
+		model.User{},
+		model.Env{},
+		model.Password{},
+		model.Service{},
+		model.Menu{},
+		model.SubMenu{},
+		model.SubSubMenu{},
+		model.Role{},
+		model.RoleMenuRelation{},
+	)
 	logger.Info("数据库连接成功")
 }
 

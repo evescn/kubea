@@ -282,7 +282,7 @@ func (p *deployment) RestartDeployment(c *gin.Context) {
 	}
 
 	//调用service方法，获取列表
-	err = service.Deployment.RestartDeployment(client, params.DeploymentName, params.Namespace)
+	err = service.Deployment.RestartDeployment2(client, params.DeploymentName, params.Namespace)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),

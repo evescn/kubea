@@ -29,14 +29,24 @@ func (*event) GetList(name, cluster string, page, limit int) (*Events, error) {
 		total     = 0
 	)
 
-	//数据库查询
+	//数据库查询，先查total
 	tx := db.GORM.Model(&model.Event{}).
 		Where("name like ? and cluster = ?", "%"+name+"%", cluster).
-		Count(&total).
+		Count(&total)
+
+	if tx.Error != nil {
+		logger.Error("获取Event列表失败," + tx.Error.Error())
+		return nil, errors.New("获取Event列表失败," + tx.Error.Error())
+	}
+
+	//数据库查询
+	tx = db.GORM.Model(&model.Event{}).
+		Where("name like ? and cluster = ?", "%"+name+"%", cluster).
 		Limit(limit).
 		Offset(startSet).
 		Order("id desc").
 		Find(&eventList)
+
 	if tx.Error != nil {
 		logger.Error(fmt.Sprintf("获取Event列表失败, %v\n", tx.Error))
 		return nil, errors.New(fmt.Sprintf("获取Event列表失败, %v\n", tx.Error))

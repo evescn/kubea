@@ -67,7 +67,7 @@ func onAdd(obj interface{}, cluster string) {
 		return
 	}
 	if has {
-		logger.Info(fmt.Sprintf("Event数据已存在, %s %s %s %s %v %s\n",
+		logger.Info(fmt.Sprintf("Event数据已存在, %s %s %s %s %v %s",
 			event.InvolvedObject.Name,
 			event.InvolvedObject.Kind,
 			event.InvolvedObject.Namespace,
