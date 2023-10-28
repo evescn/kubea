@@ -23,6 +23,7 @@ func (r *router) InitApiRouter(router *gin.Engine) {
 		GET("/api/user/list", controller.User.List).
 		POST("/api/user/add", controller.User.Add).
 		PUT("/api/user/update", controller.User.Update).
+		PUT("/api/user/updateAdmin", controller.User.UpdateAdmin).
 		PUT("/api/user/updateRole", controller.User.UpdateRole).
 		DELETE("/api/user/del", controller.User.Delete).
 		// 环境管理
