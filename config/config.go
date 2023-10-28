@@ -17,7 +17,8 @@ const (
 	DbType = "mysql"
 	DbHost = "localhost"
 	DbPort = 3306
-	DbName = "kubea_cicd_demo"
+	//DbName = "kubea_cicd_demo"
+	DbName = "kubea_cicd"
 	DbUser = "root"
 	DbPwd  = "123456"
 	//打印mysql debug sql日志
