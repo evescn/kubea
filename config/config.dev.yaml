@@ -50,5 +50,5 @@ ci_cd:
   cocos_user_password: "admin:11b51bea312eab12e147675012d26e1381530"
 
 gitlab:
-  gitlab_url: "https://gitlab.dayuan1997.com"
-  gitlab_token: "bJ-Nm6BZCxG6n-aF8aVt"
+  gitlab_url: "https://gitlab.evescn.com"
+  gitlab_token: "bJ-Nm123456-aF123t"

@@ -23,7 +23,8 @@
 # go.mod
 # go.sum
 # vendor/
+config/
 config/dev-config
 config/test-config
-config/
+
 log/
