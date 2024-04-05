@@ -43,5 +43,12 @@ redis:
   pool_size: 100
 
 ci_cd:
-  jenkins_url: "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
+  copy_job_name: "inf-lappcenter"
+  jenkins_url: "https://test-jenkins.dayuan1997.com"
   user_password: "admin:11b5ec1e1c83e2647675012d26e1381530"
+  cocos_jenkins_url: "http://173.30.99.254:8080"
+  cocos_user_password: "admin:11b5ec1e1c83e2647675012d26e1381530"
+
+gitlab:
+  gitlab_url: "https://gitlab.dayuan1997.com"
+  gitlab_token: "bJ-Nm6BZCxG6n-aF8aVt"
