@@ -1,0 +1,47 @@
+name: "kubea"
+mode: "release"
+port: 9000
+ws_port: 8082
+version: "v1.0"
+start_time: "2024-04-05"
+machine_id: 1
+pod_log_tail_line: 2000
+upload_path: ""
+
+admin:
+  username: "admin"
+  password: "123456"
+
+log:
+  level: "info"
+  filename: "log/kubea.log"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+kubeconfigs:
+#  dev: "./config/dev-config"
+  tst: "./config/test-config"
+
+mysql:
+  db_type: mysql
+  host: "mysql"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "kubea_cicd"
+  log_mode: false
+  max_open_conns: 100  # 最大连接数
+  max_idle_conns: 10  # 最大空闲连接
+  max_life_time: 30 # 最大生存时间
+
+redis:
+  host: "127.0.0.1"
+  port: 16379
+  password: ""
+  db: 0
+  pool_size: 100
+
+ci_cd:
+  jenkins_url: "https://test-jenkins.dayuan1997.com/view/%s/job/%s/"
+  user_password: "admin:11b5ec1e1c83e2647675012d26e1381530"
