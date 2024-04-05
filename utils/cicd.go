@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"io"
-	"kubea/settings"
 	"net/http"
 	"strings"
 )
 
-func CiCd(tmpUrl string) (body []byte, err error) {
+func CiCd(tmpUrl, auth string) (body []byte, err error) {
 	url := tmpUrl
 	method := "POST"
 
@@ -27,7 +26,7 @@ func CiCd(tmpUrl string) (body []byte, err error) {
 
 	// 添加 Basic Authentication 头
 	//auth := config.UserPassword
-	auth := settings.Conf.CiCd.UserPassword
+	//auth := settings.Conf.CiCd.UserPassword
 	authHeader := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", authHeader)

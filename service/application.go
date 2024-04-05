@@ -2,8 +2,10 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"kubea/dao"
 	"kubea/model"
+	"kubea/settings"
 )
 
 var App app
@@ -52,9 +54,9 @@ func (*app) Update(app *model.App) error {
 }
 
 // Add 新增
-func (*app) Add(app *model.App) error {
+func (*app) Add(apps *model.Apps) error {
 	//查看应用名是否存在
-	_, has, err := dao.App.Has(app.RepoName, app.AppName)
+	_, has, err := dao.App.Has(apps.RepoName, apps.AppName)
 	if err != nil {
 		return err
 	}
@@ -62,7 +64,66 @@ func (*app) Add(app *model.App) error {
 		return errors.New("该数据已存在，请重新添加")
 	}
 
-	//不存在则创建
+	fmt.Println(apps)
+
+	//不存在则创建，但是需要先创建 GitLab 和 Jenkins 流水线任务
+	// 创建 GitLab
+	if apps.GitLabJenkins.HasGitLab {
+		// 存在则创建 GitLab
+		newProjectInfo := &model.GitLab{
+			GroupName:   apps.RepoName,
+			ProjectName: apps.AppName,
+			Visibility:  apps.GitLabJenkins.Visibility,
+			Description: apps.Description,
+		}
+
+		// 检查 RepoName（组） 是否存在
+		if err := GitLab.GetGroupNameID(newProjectInfo); err != nil {
+			return err
+		}
+
+		// 检查 Visibility
+		if err := GitLab.CheckVisibility(newProjectInfo.Visibility); err != nil {
+			return err
+		}
+
+		// 检查 AppName（项目） 是否存在
+		if err := GitLab.CheckProject(newProjectInfo.ProjectName); err != nil {
+			return err
+		}
+
+		// 创建项目
+		if err := GitLab.CreateProject(newProjectInfo); err != nil {
+			return err
+		}
+	}
+
+	// 创建 Jenkins 流水线任务
+	if apps.GitLabJenkins.HasJenkins {
+		// 存在则创建 Jenkins 流水线
+		newPipelineInfo := &model.Jenkins{
+			GroupName:   apps.RepoName,
+			Name:        apps.AppName,
+			CopyJobName: settings.Conf.CiCd.CopyJobName,
+		}
+
+		// GitLab 确保仓库唯一，此处不用检查
+		// 创建
+		if err := Jenkins.CreatePipeline(newPipelineInfo); err != nil {
+			return err
+		}
+	}
+
+	// 创建数据库数据，页面展示
+	app := &model.App{
+		AppName:     apps.AppName,
+		RepoName:    apps.RepoName,
+		Lang:        apps.Lang,
+		Type:        apps.Type,
+		Owner:       apps.Owner,
+		Description: apps.Description,
+	}
+
 	if err := dao.App.Add(app); err != nil {
 		return err
 	}

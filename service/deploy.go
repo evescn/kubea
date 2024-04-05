@@ -32,7 +32,9 @@ func (*deploy) Add(d *model.Deploy) error {
 	}
 
 	//d.BuildUrl = fmt.Sprintf(config.JenkinsUrl, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
-	d.BuildUrl = fmt.Sprintf(settings.Conf.CiCd.JenkinsUrl, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
+
+	url := settings.Conf.CiCd.JenkinsUrl + "/view/%s/job/%s/"
+	d.BuildUrl = fmt.Sprintf(url, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
 	return dao.Deploy.Add(d)
 }
 
@@ -74,7 +76,7 @@ func (*deploy) CiCd(d *model.Deploy) error {
 	}
 
 	url := fmt.Sprintf("%sbuildWithParameters?ENV=%s&BRANCH=%s&IS_CREATE_TAG=%v", data.BuildUrl, data.En, data.Branch, tag)
-	_, err = utils.CiCd(url)
+	_, err = utils.CiCd(url, settings.Conf.CiCd.UserPassword)
 
 	if err != nil {
 		return err

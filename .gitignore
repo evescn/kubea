@@ -26,3 +26,4 @@
 config/dev-config
 config/test-config
 config/
+log/

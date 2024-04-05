@@ -2,6 +2,17 @@ package model
 
 import "time"
 
+type Apps struct {
+	App
+	GitLabJenkins
+}
+
+type GitLabJenkins struct {
+	HasGitLab  bool   `json:"has_gitlab"`
+	HasJenkins bool   `json:"has_jenkins"`
+	Visibility string `json:"visibility"`
+}
+
 type App struct {
 	ID        uint `json:"id" gorm:"primary_key"`
 	CreatedAt time.Time

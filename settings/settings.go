@@ -27,6 +27,8 @@ type AppConfig struct {
 	*MySQLConfig `mapstructure:"mysql"`
 	//*RedisConfig `mapstructure:"redis"`
 	*CiCd `mapstructure:"ci_cd"`
+
+	*GitLab `mapstructure:"gitlab"`
 }
 
 type Admin struct {
@@ -69,8 +71,16 @@ type MySQLConfig struct {
 //}
 
 type CiCd struct {
-	JenkinsUrl   string `mapstructure:"jenkins_url"`
-	UserPassword string `mapstructure:"user_password"`
+	CopyJobName       string `mapstructure:"copy_job_name"`
+	JenkinsUrl        string `mapstructure:"jenkins_url"`
+	UserPassword      string `mapstructure:"user_password"`
+	CocosJenkinsUrl   string `mapstructure:"cocos_jenkins_url"`
+	CocosUserPassword string `mapstructure:"cocos_user_password"`
+}
+
+type GitLab struct {
+	GitLabUrl   string `mapstructure:"gitlab_url"`
+	GitLabToken string `mapstructure:"gitlab_token"`
 }
 
 func Init() (err error) {

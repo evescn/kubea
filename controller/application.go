@@ -186,7 +186,7 @@ func (*app) Update(c *gin.Context) {
 // Add 新增
 func (*app) Add(c *gin.Context) {
 	//接收参数
-	params := new(model.App)
+	params := new(model.Apps)
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
