@@ -44,9 +44,9 @@ redis:
 
 ci_cd:
   copy_job_name: "inf-lappcenter"
-  jenkins_url: "https://test-jenkins.dayuan1997.com"
+  jenkins_url: "https://test-jenkins.evescn.com"
   user_password: "admin:11b51bea312eab12e147675012d26e1381530"
-  cocos_jenkins_url: "http://173.30.99.254:8080"
+  cocos_jenkins_url: "https://test-mac-jenkins.evescn.com"
   cocos_user_password: "admin:11b51bea312eab12e147675012d26e1381530"
 
 gitlab:
