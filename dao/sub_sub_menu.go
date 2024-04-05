@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -36,7 +36,7 @@ func (*subSubMenu) List(subSubMenuName string, page, limit int) (*SubSubMenus, e
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取SubSubMenu列表失败," + tx.Error.Error())
+		zap.L().Error("获取SubSubMenu列表失败," + tx.Error.Error())
 		return nil, errors.New("获取SubSubMenu列表失败," + tx.Error.Error())
 	}
 
@@ -49,7 +49,7 @@ func (*subSubMenu) List(subSubMenuName string, page, limit int) (*SubSubMenus, e
 		Order("name").
 		Find(&subSubMenuList)
 	if tx.Error != nil {
-		logger.Error("获取SubSubMenu列表失败," + tx.Error.Error())
+		zap.L().Error("获取SubSubMenu列表失败," + tx.Error.Error())
 		return nil, errors.New("获取SubSubMenu列表失败," + tx.Error.Error())
 	}
 
@@ -68,7 +68,7 @@ func (*subSubMenu) Get(ID uint) (*model.SubSubMenu, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据ID查询SubSubMenu失败," + tx.Error.Error())
+		zap.L().Error("根据ID查询SubSubMenu失败," + tx.Error.Error())
 		return nil, false, errors.New("根据ID查询SubSubMenu失败," + tx.Error.Error())
 	}
 
@@ -84,7 +84,7 @@ func (*subSubMenu) GetP(id uint) ([]*model.SubSubMenu, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据 ParentID 查询SubMenu失败," + tx.Error.Error())
+		zap.L().Error("根据 ParentID 查询SubMenu失败," + tx.Error.Error())
 		return nil, false, errors.New("根据 ParentID 查询SubMenu失败," + tx.Error.Error())
 	}
 
@@ -100,7 +100,7 @@ func (*subSubMenu) Has(pagePath string) (*model.SubSubMenu, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据路径查询SubSubMenu失败," + tx.Error.Error())
+		zap.L().Error("根据路径查询SubSubMenu失败," + tx.Error.Error())
 		return nil, false, errors.New("根据路径查询SubSubMenu失败," + tx.Error.Error())
 	}
 
@@ -111,7 +111,7 @@ func (*subSubMenu) Has(pagePath string) (*model.SubSubMenu, bool, error) {
 func (*subSubMenu) Update(u *model.SubSubMenu) error {
 	tx := db.GORM.Model(&model.SubSubMenu{}).Where("path = ?", u.Path).Updates(&u)
 	if tx.Error != nil {
-		logger.Error("更新SubSubMenu信息失败," + tx.Error.Error())
+		zap.L().Error("更新SubSubMenu信息失败," + tx.Error.Error())
 		return errors.New("更新SubSubMenu信息失败," + tx.Error.Error())
 	}
 
@@ -122,7 +122,7 @@ func (*subSubMenu) Update(u *model.SubSubMenu) error {
 func (*subSubMenu) Add(u *model.SubSubMenu) error {
 	tx := db.GORM.Create(&u)
 	if tx.Error != nil {
-		logger.Error("新增SubSubMenu信息失败," + tx.Error.Error())
+		zap.L().Error("新增SubSubMenu信息失败," + tx.Error.Error())
 		return errors.New("新增SubSubMenu信息失败," + tx.Error.Error())
 	}
 
@@ -136,7 +136,7 @@ func (*subSubMenu) Delete(id uint) error {
 	//tx := db.GORM.Unscoped().Delete(&data)
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除SubSubMenu信息失败," + tx.Error.Error())
+		zap.L().Error("删除SubSubMenu信息失败," + tx.Error.Error())
 		return errors.New("删除SubSubMenu信息失败," + tx.Error.Error())
 	}
 

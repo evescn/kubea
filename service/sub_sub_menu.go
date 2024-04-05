@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
 )
@@ -30,7 +30,8 @@ func (*subSubMenu) Add(m *model.SubSubMenu) error {
 	}
 
 	if has {
-		logger.Error("当前3级菜单数据已存在，请重新创建")
+		zap.L().
+			Error("当前3级菜单数据已存在，请重新创建")
 		return errors.New("当前3级菜单数据已存在，请重新创建")
 	}
 

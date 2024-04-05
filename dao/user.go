@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -43,7 +43,7 @@ func (*user) List(userName string, page, limit int) (*Users, error) {
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取User列表失败," + tx.Error.Error())
+		zap.L().Error("获取User列表失败," + tx.Error.Error())
 		return nil, errors.New("获取User列表失败," + tx.Error.Error())
 	}
 
@@ -56,7 +56,7 @@ func (*user) List(userName string, page, limit int) (*Users, error) {
 		Order("username").
 		Find(&userList)
 	if tx.Error != nil {
-		logger.Error("获取User列表失败," + tx.Error.Error())
+		zap.L().Error("获取User列表失败," + tx.Error.Error())
 		return nil, errors.New("获取User列表失败," + tx.Error.Error())
 	}
 
@@ -85,7 +85,7 @@ func (*user) Has(userName string) (*model.User, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据用户名查询User失败," + tx.Error.Error())
+		zap.L().Error("根据用户名查询User失败," + tx.Error.Error())
 		return nil, false, errors.New("根据用户名查询User失败," + tx.Error.Error())
 	}
 
@@ -96,7 +96,7 @@ func (*user) Has(userName string) (*model.User, bool, error) {
 func (*user) Update(u *model.User) error {
 	tx := db.GORM.Model(&model.User{}).Where("username = ?", u.UserName).Updates(&u)
 	if tx.Error != nil {
-		logger.Error("更新User信息失败," + tx.Error.Error())
+		zap.L().Error("更新User信息失败," + tx.Error.Error())
 		return errors.New("更新User信息失败," + tx.Error.Error())
 	}
 
@@ -107,7 +107,7 @@ func (*user) Update(u *model.User) error {
 func (*user) Add(u *model.User) error {
 	tx := db.GORM.Create(&u)
 	if tx.Error != nil {
-		logger.Error("新增User信息失败," + tx.Error.Error())
+		zap.L().Error("新增User信息失败," + tx.Error.Error())
 		return errors.New("新增User信息失败," + tx.Error.Error())
 	}
 
@@ -120,7 +120,7 @@ func (*user) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除User信息失败," + tx.Error.Error())
+		zap.L().Error("删除User信息失败," + tx.Error.Error())
 		return errors.New("删除User信息失败," + tx.Error.Error())
 	}
 

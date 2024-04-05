@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -36,7 +36,7 @@ func (*env) List(envName string, page, limit int) (*Envs, error) {
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Env列表失败," + tx.Error.Error())
+		zap.L().Error("获取Env列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Env列表失败," + tx.Error.Error())
 	}
 
@@ -49,7 +49,7 @@ func (*env) List(envName string, page, limit int) (*Envs, error) {
 		Order("id").
 		Find(&envList)
 	if tx.Error != nil {
-		logger.Error("获取Env列表失败," + tx.Error.Error())
+		zap.L().Error("获取Env列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Env列表失败," + tx.Error.Error())
 	}
 
@@ -68,7 +68,7 @@ func (*env) List(envName string, page, limit int) (*Envs, error) {
 //	}
 //
 //	if tx.Error != nil {
-//		logger.Error("查询Env信息失败," + tx.Error.Error())
+//		zap.L().Error("查询Env信息失败," + tx.Error.Error())
 //		return nil, false, errors.New("查询Env信息失败," + tx.Error.Error())
 //	}
 //
@@ -84,7 +84,7 @@ func (*env) Has(envName string) (*model.Env, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据名称查询Env失败," + tx.Error.Error())
+		zap.L().Error("根据名称查询Env失败," + tx.Error.Error())
 		return nil, false, errors.New("根据名称查询Env失败," + tx.Error.Error())
 	}
 
@@ -95,7 +95,7 @@ func (*env) Has(envName string) (*model.Env, bool, error) {
 func (*env) Add(e *model.Env) error {
 	tx := db.GORM.Create(&e)
 	if tx.Error != nil {
-		logger.Error("新增Env信息失败," + tx.Error.Error())
+		zap.L().Error("新增Env信息失败," + tx.Error.Error())
 		return errors.New("新增Env信息失败," + tx.Error.Error())
 	}
 
@@ -106,7 +106,7 @@ func (*env) Add(e *model.Env) error {
 func (*env) Update(e *model.Env) error {
 	tx := db.GORM.Model(&model.Env{}).Where("id = ?", e.ID).Updates(&e)
 	if tx.Error != nil {
-		logger.Error("更新Env信息失败," + tx.Error.Error())
+		zap.L().Error("更新Env信息失败," + tx.Error.Error())
 		return errors.New("更新Env信息失败," + tx.Error.Error())
 	}
 
@@ -119,7 +119,7 @@ func (*env) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Env信息失败," + tx.Error.Error())
+		zap.L().Error("删除Env信息失败," + tx.Error.Error())
 		return errors.New("删除Env信息失败," + tx.Error.Error())
 	}
 

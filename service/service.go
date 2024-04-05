@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -59,7 +59,7 @@ func (s *servicev1) GetServices(client *kubernetes.Clientset, filterName, namesp
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	serviceList, err := client.CoreV1().Services(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Service 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Service 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Service 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 p 结构体中获取到的 Service 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -91,7 +91,7 @@ func (s *servicev1) GetServices(client *kubernetes.Clientset, filterName, namesp
 func (s *servicev1) GetServiceDetail(client *kubernetes.Clientset, serviceName, namespace string) (service *corev1.Service, err error) {
 	service, err = client.CoreV1().Services(namespace).Get(context.TODO(), serviceName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Service 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Service 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Service 详情失败, %v\n", err))
 	}
 	return service, nil
@@ -101,7 +101,7 @@ func (s *servicev1) GetServiceDetail(client *kubernetes.Clientset, serviceName, 
 func (s *servicev1) DeleteService(client *kubernetes.Clientset, serviceName, namespace string) (err error) {
 	err = client.CoreV1().Services(namespace).Delete(context.TODO(), serviceName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Service 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 Service 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Service 失败, %v\n", err))
 	}
 	return nil
@@ -115,13 +115,13 @@ func (s *servicev1) UpdateService(client *kubernetes.Clientset, content, namespa
 	//反序列化成Service对象
 	err = json.Unmarshal([]byte(content), &services)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新Service
 	_, err = client.CoreV1().Services(namespace).Update(context.TODO(), services, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 Service 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 Service 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 Service 失败, %v\n", err))
 	}
 	return nil
@@ -162,7 +162,7 @@ func (s *servicev1) CreateService(client *kubernetes.Clientset, data *ServiceCre
 	// 创建 Service
 	_, err = client.CoreV1().Services(data.Namespace).Create(context.TODO(), service, metav1.CreateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("创建 Service 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("创建 Service 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("创建 Service 失败, %v\n", err))
 	}
 	return nil

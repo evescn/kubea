@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -36,7 +36,7 @@ func (*menu) List(menuName string, page, limit int) (*Menus, error) {
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Menu列表失败," + tx.Error.Error())
+		zap.L().Error("获取Menu列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Menu列表失败," + tx.Error.Error())
 	}
 
@@ -49,7 +49,7 @@ func (*menu) List(menuName string, page, limit int) (*Menus, error) {
 		Order("name").
 		Find(&menuList)
 	if tx.Error != nil {
-		logger.Error("获取Menu列表失败," + tx.Error.Error())
+		zap.L().Error("获取Menu列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Menu列表失败," + tx.Error.Error())
 	}
 
@@ -64,7 +64,7 @@ func (*menu) GetAll() ([]*model.Menu, error) {
 	data := make([]*model.Menu, 0)
 	tx := db.GORM.Find(&data)
 	if tx.Error != nil {
-		logger.Error("查询所有Menu失败," + tx.Error.Error())
+		zap.L().Error("查询所有Menu失败," + tx.Error.Error())
 		return nil, errors.New("查询所有Menu失败," + tx.Error.Error())
 	}
 
@@ -80,7 +80,7 @@ func (*menu) Get(ID uint) (*model.Menu, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据路径查询Menu失败," + tx.Error.Error())
+		zap.L().Error("根据路径查询Menu失败," + tx.Error.Error())
 		return nil, false, errors.New("根据路径查询Menu失败," + tx.Error.Error())
 	}
 
@@ -96,7 +96,7 @@ func (*menu) Has(pagePath string) (*model.Menu, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据路径查询Menu失败," + tx.Error.Error())
+		zap.L().Error("根据路径查询Menu失败," + tx.Error.Error())
 		return nil, false, errors.New("根据路径查询Menu失败," + tx.Error.Error())
 	}
 
@@ -107,7 +107,7 @@ func (*menu) Has(pagePath string) (*model.Menu, bool, error) {
 func (*menu) Add(u *model.Menu) error {
 	tx := db.GORM.Create(&u)
 	if tx.Error != nil {
-		logger.Error("新增Menu信息失败," + tx.Error.Error())
+		zap.L().Error("新增Menu信息失败," + tx.Error.Error())
 		return errors.New("新增Menu信息失败," + tx.Error.Error())
 	}
 
@@ -118,7 +118,7 @@ func (*menu) Add(u *model.Menu) error {
 func (*menu) Update(u *model.Menu) error {
 	tx := db.GORM.Model(&model.Menu{}).Where("path = ?", u.Path).Updates(&u)
 	if tx.Error != nil {
-		logger.Error("更新Menu信息失败," + tx.Error.Error())
+		zap.L().Error("更新Menu信息失败," + tx.Error.Error())
 		return errors.New("更新Menu信息失败," + tx.Error.Error())
 	}
 
@@ -131,7 +131,7 @@ func (*menu) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Menu信息失败," + tx.Error.Error())
+		zap.L().Error("删除Menu信息失败," + tx.Error.Error())
 		return errors.New("删除Menu信息失败," + tx.Error.Error())
 	}
 

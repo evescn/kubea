@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -48,7 +48,7 @@ func (*service) List(serviceName string, eid uint, page, limit int) (*Services, 
 	tx := query.Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Service列表失败," + tx.Error.Error())
+		zap.L().Error("获取Service列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Service列表失败," + tx.Error.Error())
 	}
 
@@ -59,7 +59,7 @@ func (*service) List(serviceName string, eid uint, page, limit int) (*Services, 
 		Order("service.id").
 		Find(&serviceList)
 	if tx.Error != nil {
-		logger.Error("获取Service列表失败," + tx.Error.Error())
+		zap.L().Error("获取Service列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Service列表失败," + tx.Error.Error())
 	}
 
@@ -91,7 +91,7 @@ func (*service) ListNoUserInfo(serviceName string, eid uint, page, limit int) (*
 	tx := query.Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Service列表失败," + tx.Error.Error())
+		zap.L().Error("获取Service列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Service列表失败," + tx.Error.Error())
 	}
 
@@ -102,7 +102,7 @@ func (*service) ListNoUserInfo(serviceName string, eid uint, page, limit int) (*
 		Order("service.id").
 		Find(&serviceList)
 	if tx.Error != nil {
-		logger.Error("获取Service列表失败," + tx.Error.Error())
+		zap.L().Error("获取Service列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Service列表失败," + tx.Error.Error())
 	}
 
@@ -121,7 +121,7 @@ func (*service) Get(eid uint) (*model.Service, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据名称查询Service失败," + tx.Error.Error())
+		zap.L().Error("根据名称查询Service失败," + tx.Error.Error())
 		return nil, false, errors.New("根据名称查询Service失败," + tx.Error.Error())
 	}
 
@@ -137,7 +137,7 @@ func (*service) Has(serviceName string, eid uint) (*model.Service, bool, error) 
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据名称查询Service失败," + tx.Error.Error())
+		zap.L().Error("根据名称查询Service失败," + tx.Error.Error())
 		return nil, false, errors.New("根据名称查询Service失败," + tx.Error.Error())
 	}
 
@@ -148,7 +148,7 @@ func (*service) Has(serviceName string, eid uint) (*model.Service, bool, error) 
 func (*service) Add(e *model.Service) error {
 	tx := db.GORM.Create(&e)
 	if tx.Error != nil {
-		logger.Error("新增Service信息失败," + tx.Error.Error())
+		zap.L().Error("新增Service信息失败," + tx.Error.Error())
 		return errors.New("新增Service信息失败," + tx.Error.Error())
 	}
 
@@ -159,7 +159,7 @@ func (*service) Add(e *model.Service) error {
 func (*service) Update(e *model.Service) error {
 	tx := db.GORM.Model(&model.Service{}).Where("id = ?", e.ID).Updates(&e)
 	if tx.Error != nil {
-		logger.Error("更新Service信息失败," + tx.Error.Error())
+		zap.L().Error("更新Service信息失败," + tx.Error.Error())
 		return errors.New("更新Service信息失败," + tx.Error.Error())
 	}
 
@@ -172,7 +172,7 @@ func (*service) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Service信息失败," + tx.Error.Error())
+		zap.L().Error("删除Service信息失败," + tx.Error.Error())
 		return errors.New("删除Service信息失败," + tx.Error.Error())
 	}
 

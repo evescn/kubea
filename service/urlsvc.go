@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
 )
@@ -25,13 +25,13 @@ func (*service) List(userName, serviceName string, role, eid uint, page, limit i
 	}
 
 	if data.Role != role {
-		logger.Error("当前用户信息不存在，")
+		zap.L().Error("当前用户信息不存在，")
 		return nil, errors.New("当前用户信息不存在")
 	}
 
 	roleData, has, err := dao.Role.Get(role)
 	if !has {
-		logger.Error("当前角色信息不存在，")
+		zap.L().Error("当前角色信息不存在，")
 		return nil, errors.New("当前角色信息不存在")
 	}
 
@@ -52,7 +52,7 @@ func (*service) Add(se *dao.ServiceRes) error {
 	}
 
 	if has {
-		logger.Error("当前数据已存在，请重新创建")
+		zap.L().Error("当前数据已存在，请重新创建")
 		return errors.New("当前数据已存在，请重新创建")
 	}
 
@@ -92,7 +92,7 @@ func (*service) Update(se *dao.ServiceRes) error {
 		PName:    se.PName,
 		Password: se.Password,
 	}
-	//logger.Info(*p)
+	//zap.L().Info(*p)
 	if err := dao.Password.Update(p); err != nil {
 		return err
 	}
@@ -104,7 +104,7 @@ func (*service) Update(se *dao.ServiceRes) error {
 		Url:         se.Url,
 		Description: se.Description,
 	}
-	//logger.Info(*s)
+	//zap.L().Info(*s)
 	if err := dao.Service.Update(s); err != nil {
 		return err
 	}

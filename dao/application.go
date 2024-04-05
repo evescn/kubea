@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -39,7 +39,7 @@ func (*app) List(appName, repoName string, page, limit int) (*Apps, error) {
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Application列表失败," + tx.Error.Error())
+		zap.L().Error("获取Application列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Application列表失败," + tx.Error.Error())
 	}
 
@@ -53,7 +53,7 @@ func (*app) List(appName, repoName string, page, limit int) (*Apps, error) {
 		Order("app_name").
 		Find(&appList)
 	if tx.Error != nil {
-		logger.Error("获取Application列表失败," + tx.Error.Error())
+		zap.L().Error("获取Application列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Application列表失败," + tx.Error.Error())
 	}
 
@@ -72,7 +72,7 @@ func (*app) Get(appId uint) (*model.App, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("查询Application失败," + tx.Error.Error())
+		zap.L().Error("查询Application失败," + tx.Error.Error())
 		return nil, false, errors.New("查询Application失败," + tx.Error.Error())
 	}
 
@@ -84,7 +84,7 @@ func (*app) GetAll() ([]*model.App, error) {
 	data := make([]*model.App, 0)
 	tx := db.GORM.Find(&data)
 	if tx.Error != nil {
-		logger.Error("查询所有Application失败," + tx.Error.Error())
+		zap.L().Error("查询所有Application失败," + tx.Error.Error())
 		return nil, errors.New("查询所有Application失败," + tx.Error.Error())
 	}
 
@@ -102,7 +102,7 @@ func (*app) GetApp(repo string) ([]*model.App, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据仓库名查询Application失败," + tx.Error.Error())
+		zap.L().Error("根据仓库名查询Application失败," + tx.Error.Error())
 		return nil, false, errors.New("根据仓库名查询Application失败," + tx.Error.Error())
 	}
 
@@ -118,7 +118,7 @@ func (*app) Has(repoName, appName string) (*model.App, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据应用名查询Application失败," + tx.Error.Error())
+		zap.L().Error("根据应用名查询Application失败," + tx.Error.Error())
 		return nil, false, errors.New("根据应用名查询Application失败," + tx.Error.Error())
 	}
 
@@ -129,7 +129,7 @@ func (*app) Has(repoName, appName string) (*model.App, bool, error) {
 func (*app) Update(app *model.App) error {
 	tx := db.GORM.Model(&model.App{}).Where("id = ?", app.ID).Updates(&app)
 	if tx.Error != nil {
-		logger.Error("更新Application失败," + tx.Error.Error())
+		zap.L().Error("更新Application失败," + tx.Error.Error())
 		return errors.New("更新Application失败," + tx.Error.Error())
 	}
 
@@ -140,7 +140,7 @@ func (*app) Update(app *model.App) error {
 func (*app) Add(app *model.App) error {
 	tx := db.GORM.Create(&app)
 	if tx.Error != nil {
-		logger.Error("新增Application失败," + tx.Error.Error())
+		zap.L().Error("新增Application失败," + tx.Error.Error())
 		return errors.New("新增Application失败," + tx.Error.Error())
 	}
 
@@ -153,7 +153,7 @@ func (*app) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Application失败," + tx.Error.Error())
+		zap.L().Error("删除Application失败," + tx.Error.Error())
 		return errors.New("删除Application失败," + tx.Error.Error())
 	}
 

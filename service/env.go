@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
 )
@@ -25,7 +25,7 @@ func (*env) Add(e *model.Env) error {
 	}
 
 	if has {
-		logger.Error("当前数据已存在，请重新创建")
+		zap.L().Error("当前数据已存在，请重新创建")
 		return errors.New("当前数据已存在，请重新创建")
 	}
 
@@ -50,7 +50,7 @@ func (*env) Delete(id uint) error {
 	}
 
 	if has {
-		logger.Error("当前环境关联URL信息，请先删除关联信息")
+		zap.L().Error("当前环境关联URL信息，请先删除关联信息")
 		return errors.New("当前环境关联URL信息，请先删除关联信息")
 	}
 

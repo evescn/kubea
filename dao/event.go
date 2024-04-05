@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 	"time"
@@ -35,7 +35,7 @@ func (*event) GetList(name, cluster string, page, limit int) (*Events, error) {
 		Count(&total)
 
 	if tx.Error != nil {
-		logger.Error("获取Event列表失败," + tx.Error.Error())
+		zap.L().Error("获取Event列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Event列表失败," + tx.Error.Error())
 	}
 
@@ -48,7 +48,7 @@ func (*event) GetList(name, cluster string, page, limit int) (*Events, error) {
 		Find(&eventList)
 
 	if tx.Error != nil {
-		logger.Error(fmt.Sprintf("获取Event列表失败, %v\n", tx.Error))
+		zap.L().Error(fmt.Sprintf("获取Event列表失败, %v\n", tx.Error))
 		return nil, errors.New(fmt.Sprintf("获取Event列表失败, %v\n", tx.Error))
 	}
 
@@ -62,7 +62,7 @@ func (*event) GetList(name, cluster string, page, limit int) (*Events, error) {
 func (*event) Add(event *model.Event) error {
 	tx := db.GORM.Create(&event)
 	if tx.Error != nil {
-		logger.Error(fmt.Sprintf("添加Event失败, %v\n", tx.Error))
+		zap.L().Error(fmt.Sprintf("添加Event失败, %v\n", tx.Error))
 		return errors.New(fmt.Sprintf("添加Event失败, %v\n", tx.Error))
 	}
 	return nil
@@ -79,7 +79,7 @@ func (*event) HasEvent(name, kind, namespace, reason string, eventTime time.Time
 		return nil, false, nil
 	}
 	if tx.Error != nil {
-		logger.Error(fmt.Sprintf("查询Event失败, %v\n", tx.Error))
+		zap.L().Error(fmt.Sprintf("查询Event失败, %v\n", tx.Error))
 		return nil, false, errors.New(fmt.Sprintf("查询Event失败, %v\n", tx.Error))
 	}
 	return data, true, nil

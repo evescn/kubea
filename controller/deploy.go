@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/model"
 	"kubea/service"
 	"net/http"
@@ -25,7 +25,7 @@ func (*deploy) List(c *gin.Context) {
 
 	//绑定参数
 	if err := c.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败," + err.Error())
+		zap.L().Error("Bind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -60,7 +60,7 @@ func (*deploy) Update(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -95,7 +95,7 @@ func (*deploy) Add(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -132,7 +132,7 @@ func (*deploy) Delete(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -167,7 +167,7 @@ func (*deploy) CiCd(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -207,7 +207,7 @@ func (*deploy) JenkinsCiCd(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -250,7 +250,7 @@ func (*deploy) UpdateCiCd(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("Bind请求参数失败," + err.Error())
+		zap.L().Error("Bind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -287,7 +287,7 @@ func (*deploy) GetLog(c *gin.Context) {
 
 	//绑定参数
 	if err := c.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败," + err.Error())
+		zap.L().Error("Bind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),

@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -27,7 +27,7 @@ func (p *deployment) GetDeployments(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -74,7 +74,7 @@ func (p *deployment) GetDeploymentDetail(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -121,7 +121,7 @@ func (p *deployment) DeleteDeployment(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -168,7 +168,7 @@ func (p *deployment) UpdateDeployment(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -216,7 +216,7 @@ func (p *deployment) ScaleDeployment(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -263,7 +263,7 @@ func (p *deployment) RestartDeployment(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -308,7 +308,7 @@ func (p *deployment) CreateDeployment(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(deployCreate); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,

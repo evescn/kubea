@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -22,7 +22,7 @@ func (p *pv) GetPvs(c *gin.Context) {
 	})
 
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -61,7 +61,7 @@ func (p *pv) GetPvDetail(c *gin.Context) {
 	})
 
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -104,7 +104,7 @@ func (p *pv) DeletePv(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -46,7 +46,7 @@ func (s *statefulSet) GetStatefulSets(client *kubernetes.Clientset, filterName, 
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	stsList, err := client.AppsV1().StatefulSets(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 StatefulSet 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 StatefulSet 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 StatefulSet 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 d 结构体中获取到的 StatefulSet 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -78,7 +78,7 @@ func (s *statefulSet) GetStatefulSets(client *kubernetes.Clientset, filterName, 
 func (s *statefulSet) GetStatefulSetDetail(client *kubernetes.Clientset, stsName, namespace string) (sts *appsv1.StatefulSet, err error) {
 	stsDetail, err := client.AppsV1().StatefulSets(namespace).Get(context.TODO(), stsName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 StatefulSet 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 StatefulSet 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 StatefulSet 详情失败, %v\n", err))
 	}
 	return stsDetail, nil
@@ -88,7 +88,7 @@ func (s *statefulSet) GetStatefulSetDetail(client *kubernetes.Clientset, stsName
 func (s *statefulSet) DeleteStatefulSet(client *kubernetes.Clientset, stsName, namespace string) (err error) {
 	err = client.AppsV1().StatefulSets(namespace).Delete(context.TODO(), stsName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 StatefulSet 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 StatefulSet 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 StatefulSet 失败, %v\n", err))
 	}
 	return nil
@@ -102,13 +102,13 @@ func (s *statefulSet) UpdateStatefulSet(client *kubernetes.Clientset, content, n
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &sts)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
 	_, err = client.AppsV1().StatefulSets(namespace).Update(context.TODO(), sts, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 StatefulSet 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 StatefulSet 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 StatefulSet 失败, %v\n", err))
 	}
 	return nil

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -42,7 +42,8 @@ func (n *namespace) fromCells(cells []DataCell) []corev1.Namespace {
 func (n *namespace) GetNamespaces(client *kubernetes.Clientset, filterName string, limit, page int) (namespacesResp *NamespacesResp, err error) {
 	namespaceList, err := client.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Namespace 列表失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 Namespace 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Namespace 列表失败, %v\n", err))
 	}
 	// 返回给客户端的名称空间
@@ -90,7 +91,8 @@ func (n *namespace) GetNamespaces(client *kubernetes.Clientset, filterName strin
 func (n *namespace) GetNamespaceDetail(client *kubernetes.Clientset, namespaceName string) (namespace *corev1.Namespace, err error) {
 	namespaces, err := client.CoreV1().Namespaces().Get(context.TODO(), namespaceName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Namespace 详情失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 Namespace 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Namespace 详情失败, %v\n", err))
 	}
 	return namespaces, nil
@@ -100,7 +102,8 @@ func (n *namespace) GetNamespaceDetail(client *kubernetes.Clientset, namespaceNa
 func (n *namespace) DeleteNamespace(client *kubernetes.Clientset, namespaceName string) (err error) {
 	err = client.CoreV1().Namespaces().Delete(context.TODO(), namespaceName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Namespace 失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("删除 Namespace 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Namespace 失败, %v\n", err))
 	}
 	return nil

@@ -9,7 +9,7 @@ RUN apk add --no-cache tzdata \
 ENV TZ=Asia/Shanghai
 
 # 定义环境变量 ENV=uat|prod
-ENV ENV=dev
+ENV ENV=uat
 
 # 复制构建环境中的二进制文件到最终容器中
 COPY app .

@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
@@ -44,7 +44,7 @@ func (*event) WatchEventTask(cluster string) {
 	defer close(stopCh)
 	informerFactory.Start(stopCh)
 	if !cache.WaitForCacheSync(stopCh, informer.Informer().HasSynced) {
-		logger.Error("同步cache超时")
+		zap.L().Error("同步cache超时")
 		return
 	}
 	<-stopCh
@@ -67,7 +67,7 @@ func onAdd(obj interface{}, cluster string) {
 		return
 	}
 	if has {
-		logger.Info(fmt.Sprintf("Event数据已存在, %s %s %s %s %v %s",
+		zap.L().Info(fmt.Sprintf("Event数据已存在, %s %s %s %s %v %s",
 			event.InvolvedObject.Name,
 			event.InvolvedObject.Kind,
 			event.InvolvedObject.Namespace,

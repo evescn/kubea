@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func (*allRes) GetAllNum(ctx *gin.Context) {
 		Cluster string `form:"cluster"`
 	})
 	if err := ctx.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败, %v\n", err))
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败, %v\n", err),
 			"data": nil,

@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -45,7 +45,7 @@ func (*role) List(roleName string, page, limit int) (*Roles, error) {
 
 	tx := query.Count(&total)
 	if tx.Error != nil {
-		logger.Error("获取Role列表失败," + tx.Error.Error())
+		zap.L().Error("获取Role列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Role列表失败," + tx.Error.Error())
 	}
 
@@ -74,7 +74,7 @@ func (*role) GetAll() ([]*model.Role, error) {
 	data := make([]*model.Role, 0)
 	tx := db.GORM.Find(&data)
 	if tx.Error != nil {
-		logger.Error("查询所有Role失败," + tx.Error.Error())
+		zap.L().Error("查询所有Role失败," + tx.Error.Error())
 		return nil, errors.New("查询所有Role失败," + tx.Error.Error())
 	}
 
@@ -90,7 +90,7 @@ func (*role) Get(id uint) (*model.Role, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据用户名查询Role失败," + tx.Error.Error())
+		zap.L().Error("根据用户名查询Role失败," + tx.Error.Error())
 		return nil, false, errors.New("根据用户名查询Role失败," + tx.Error.Error())
 	}
 
@@ -106,7 +106,7 @@ func (*role) Has(roleName string) (*model.Role, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据用户名查询Role失败," + tx.Error.Error())
+		zap.L().Error("根据用户名查询Role失败," + tx.Error.Error())
 		return nil, false, errors.New("根据用户名查询Role失败," + tx.Error.Error())
 	}
 
@@ -117,7 +117,7 @@ func (*role) Has(roleName string) (*model.Role, bool, error) {
 func (*role) Update(u *model.Role) error {
 	tx := db.GORM.Model(&model.Role{}).Where("role_name = ?", u.RoleName).Updates(&u)
 	if tx.Error != nil {
-		logger.Error("更新Role信息失败," + tx.Error.Error())
+		zap.L().Error("更新Role信息失败," + tx.Error.Error())
 		return errors.New("更新Role信息失败," + tx.Error.Error())
 	}
 
@@ -128,7 +128,7 @@ func (*role) Update(u *model.Role) error {
 func (*role) Add(u *model.Role) error {
 	tx := db.GORM.Create(&u)
 	if tx.Error != nil {
-		logger.Error("新增Role信息失败," + tx.Error.Error())
+		zap.L().Error("新增Role信息失败," + tx.Error.Error())
 		return errors.New("新增Role信息失败," + tx.Error.Error())
 	}
 
@@ -141,7 +141,7 @@ func (*role) Delete(id uint) error {
 	data.ID = id
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Role信息失败," + tx.Error.Error())
+		zap.L().Error("删除Role信息失败," + tx.Error.Error())
 		return errors.New("删除Role信息失败," + tx.Error.Error())
 	}
 

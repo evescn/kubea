@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -40,7 +40,7 @@ func (*roleMenuRelation) GetPermissions(c *gin.Context) {
 	// 绑定请求参数
 	//绑定参数
 	if err := c.Bind(params); err != nil {
-		logger.Error("Bind 请求参数失败：" + err.Error())
+		zap.L().Error("Bind 请求参数失败：" + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -72,7 +72,7 @@ func (*roleMenuRelation) GetPermissions(c *gin.Context) {
 //
 //	// 绑定请求参数
 //	if err := c.ShouldBind(params); err != nil {
-//		logger.Error("Bind 请求参数失败：" + err.Error())
+//		zap.L().Error("Bind 请求参数失败：" + err.Error())
 //		c.JSON(http.StatusBadRequest, gin.H{
 //			"code": 90400,
 //			"msg":  err.Error(),
@@ -108,7 +108,7 @@ func (*roleMenuRelation) Update(c *gin.Context) {
 
 	// 绑定请求参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("Bind 请求参数失败：" + err.Error())
+		zap.L().Error("Bind 请求参数失败：" + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -142,7 +142,7 @@ func (*roleMenuRelation) Update(c *gin.Context) {
 //
 //	// 绑定请求参数
 //	if err := c.ShouldBind(params); err != nil {
-//		logger.Error("Bind 请求参数失败：" + err.Error())
+//		zap.L().Error("Bind 请求参数失败：" + err.Error())
 //		c.JSON(http.StatusBadRequest, gin.H{
 //			"code": 90400,
 //			"msg":  err.Error(),

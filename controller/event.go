@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -20,7 +20,7 @@ func (*event) GetList(ctx *gin.Context) {
 		Limit   int    `form:"limit"`
 	})
 	if err := ctx.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),
 			"data": nil,

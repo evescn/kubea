@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -42,7 +42,8 @@ func (p *pv) fromCells(cells []DataCell) []corev1.PersistentVolume {
 func (p *pv) GetPvs(client *kubernetes.Clientset, filterName string, limit, page int) (pvsResp *PvsResp, err error) {
 	pvList, err := client.CoreV1().PersistentVolumes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
 	}
 	selectableData := &dataSelector{
@@ -74,7 +75,7 @@ func (p *pv) GetPvs(client *kubernetes.Clientset, filterName string, limit, page
 func (p *pv) GetPvDetail(client *kubernetes.Clientset, pvName string) (pvs *corev1.PersistentVolume, err error) {
 	pvDetail, err := client.CoreV1().PersistentVolumes().Get(context.TODO(), pvName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 PV 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 PV 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 PV 详情失败, %v\n", err))
 	}
 	return pvDetail, nil
@@ -84,7 +85,7 @@ func (p *pv) GetPvDetail(client *kubernetes.Clientset, pvName string) (pvs *core
 func (p *pv) DeletePv(client *kubernetes.Clientset, pvName string) (err error) {
 	err = client.CoreV1().PersistentVolumes().Delete(context.TODO(), pvName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 PV 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 PV 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 PV 失败, %v\n", err))
 	}
 	return nil

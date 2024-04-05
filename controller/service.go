@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -27,7 +27,7 @@ func (s *servicev1) GetServices(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -74,7 +74,7 @@ func (s *servicev1) GetServiceDetail(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.Bind(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -121,7 +121,7 @@ func (s *servicev1) DeleteService(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -168,7 +168,7 @@ func (s *servicev1) UpdateService(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(params); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,
@@ -213,7 +213,7 @@ func (s *servicev1) CreateService(c *gin.Context) {
 	//绑定参数
 	//form格式使用ctx.Bind方法，json格式使用ctx.ShouldBindJSON方法
 	if err := c.ShouldBindJSON(serviceCreate); err != nil {
-		logger.Error(fmt.Sprintf("绑定参数失败， %v\n", err))
+		zap.L().Error(fmt.Sprintf("绑定参数失败， %v\n", err))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"msg":  fmt.Sprintf("绑定参数失败， %v\n", err),
 			"data": nil,

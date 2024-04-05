@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/model"
 	"kubea/service"
 	"net/http"
@@ -20,7 +20,7 @@ func (*helmStore) ListReleases(ctx *gin.Context) {
 		Cluster    string `form:"cluster"`
 	})
 	if err := ctx.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -58,7 +58,7 @@ func (*helmStore) DetailRelease(ctx *gin.Context) {
 		Cluster   string `form:"cluster"`
 	})
 	if err := ctx.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -97,7 +97,7 @@ func (*helmStore) InstallRelease(ctx *gin.Context) {
 		Cluster   string `json:"cluster"`
 	})
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -135,7 +135,7 @@ func (*helmStore) UninstallRelease(ctx *gin.Context) {
 		Cluster   string `json:"cluster"`
 	})
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -170,7 +170,7 @@ func (*helmStore) UploadChartFile(ctx *gin.Context) {
 	//ctx.Request.FormFile可以直接获取到file multipart.File, header *multipart.FileHeader
 	file, header, err := ctx.Request.FormFile("chart")
 	if err != nil {
-		logger.Error("获取上传信息失败, " + err.Error())
+		zap.L().Error("获取上传信息失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -198,7 +198,7 @@ func (*helmStore) DeleteChartFile(ctx *gin.Context) {
 		Chart string `json:"chart"`
 	})
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -228,7 +228,7 @@ func (*helmStore) ListCharts(ctx *gin.Context) {
 		Limit int    `form:"limit"`
 	})
 	if err := ctx.Bind(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -254,7 +254,7 @@ func (*helmStore) ListCharts(ctx *gin.Context) {
 func (*helmStore) AddChart(ctx *gin.Context) {
 	params := new(model.Chart)
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -280,7 +280,7 @@ func (*helmStore) AddChart(ctx *gin.Context) {
 func (*helmStore) UpdateChart(ctx *gin.Context) {
 	params := new(model.Chart)
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -306,7 +306,7 @@ func (*helmStore) UpdateChart(ctx *gin.Context) {
 func (*helmStore) DeleteChart(ctx *gin.Context) {
 	params := new(model.Chart)
 	if err := ctx.ShouldBindJSON(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"msg":  err.Error(),
 			"data": nil,

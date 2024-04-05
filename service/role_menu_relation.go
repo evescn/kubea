@@ -158,14 +158,14 @@ func (*roleMenuRelation) Update(roleID uint, newRoleMenuRelation, oldRoleMenuRel
 			SubPageID:    uint(subPageID),
 			SubSubPageID: uint(subSubPageID),
 		}
-		//logger.Info(data)
+		//zap.L().Info(data)
 		err := dao.RoleMenuRelation.Delete(data)
 		if err != nil {
 			return err
 		}
 	}
-	//logger.Info("addData:", addData)
-	//logger.Info("delData:", delData)
+	//zap.L().Info("addData:", addData)
+	//zap.L().Info("delData:", delData)
 	//return dao.RoleMenuRelation.Update(e)
 	return nil
 }
@@ -186,6 +186,6 @@ func (*roleMenuRelation) SliceDifference(slice1, slice2 []string) []string {
 		}
 	}
 
-	//logger.Info("差集:", difference)
+	//zap.L().Info("差集:", difference)
 	return difference
 }

@@ -2,10 +2,10 @@ package service
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
-	"kubea/config"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
+	"kubea/settings"
 )
 
 var Login login
@@ -14,9 +14,9 @@ type login struct{}
 
 // Auth 验证账号密码
 func (l *login) Auth(username, password string) (*model.User, error) {
-	if username == config.AdminUser {
-		if password != config.AdminPwd {
-			logger.Error("登录失败, 用户名或密码错误")
+	if username == settings.Conf.Admin.UserName {
+		if password != settings.Conf.Admin.PassWord {
+			zap.L().Error("登录失败, 用户名或密码错误")
 			return nil, errors.New("登录失败, 用户名或密码错误")
 		} else {
 			return &model.User{

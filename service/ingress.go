@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	nwv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -64,7 +64,7 @@ func (i *ingress) GetIngresses(client *kubernetes.Clientset, filterName, namespa
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	ingressList, err := client.NetworkingV1().Ingresses(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Ingress 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Ingress 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Ingress 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 p 结构体中获取到的 Ingress 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -96,7 +96,7 @@ func (i *ingress) GetIngresses(client *kubernetes.Clientset, filterName, namespa
 func (i *ingress) GetIngressDetail(client *kubernetes.Clientset, ingressName, namespace string) (Ingress *nwv1.Ingress, err error) {
 	ingresses, err := client.NetworkingV1().Ingresses(namespace).Get(context.TODO(), ingressName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Ingress 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Ingress 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Ingress 详情失败, %v\n", err))
 	}
 	return ingresses, nil
@@ -106,7 +106,7 @@ func (i *ingress) GetIngressDetail(client *kubernetes.Clientset, ingressName, na
 func (i *ingress) DeleteIngress(client *kubernetes.Clientset, ingressName, namespace string) (err error) {
 	err = client.NetworkingV1().Ingresses(namespace).Delete(context.TODO(), ingressName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Ingress 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 Ingress 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Ingress 失败, %v\n", err))
 	}
 	return nil
@@ -120,13 +120,13 @@ func (i *ingress) UpdateIngress(client *kubernetes.Clientset, content, namespace
 	//反序列化成Ingress对象
 	err = json.Unmarshal([]byte(content), &ingresses)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新Ingress
 	_, err = client.NetworkingV1().Ingresses(namespace).Update(context.TODO(), ingresses, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 Ingress 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 Ingress 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 Ingress 失败, %v\n", err))
 	}
 	return nil
@@ -189,7 +189,7 @@ func (i *ingress) CreateIngress(client *kubernetes.Clientset, data *IngressCreat
 	// 创建 Ingress
 	_, err = client.NetworkingV1().Ingresses(data.Namespace).Create(context.TODO(), ingresses, metav1.CreateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("创建 Ingress 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("创建 Ingress 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("创建 Ingress 失败, %v\n", err))
 	}
 	return nil

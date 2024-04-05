@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/service"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func (*login) Auth(c *gin.Context) {
 		Password string `json:"password"`
 	})
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("Bind请求参数失败, " + err.Error())
+		zap.L().Error("Bind请求参数失败, " + err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),
 			"data": nil,
@@ -36,7 +36,7 @@ func (*login) Auth(c *gin.Context) {
 
 	// 调用页面接口
 	router, err := service.VueRouter.SetRouter(data.Role)
-	//logger.Info(router)
+	//zap.L().Info(router)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg":  err.Error(),

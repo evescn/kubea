@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/remotecommand"
@@ -84,12 +84,12 @@ func (t *TerminalSession) Next() *remotecommand.TerminalSize {
 func (t *TerminalSession) Read(p []byte) (int, error) {
 	_, message, err := t.wsConn.ReadMessage()
 	if err != nil {
-		logger.Error(fmt.Sprintf("read message err: %v\n", err))
+		zap.L().Error(fmt.Sprintf("read message err: %v\n", err))
 		return 0, err
 	}
 	var msg TerminalMessage
 	if err = json.Unmarshal([]byte(message), &msg); err != nil {
-		logger.Error(fmt.Sprintf("read parse message err: %v\n", err))
+		zap.L().Error(fmt.Sprintf("read parse message err: %v\n", err))
 		return 0, err
 	}
 
@@ -105,7 +105,7 @@ func (t *TerminalSession) Read(p []byte) (int, error) {
 	case "ping":
 		return 0, nil
 	default:
-		logger.Error(fmt.Sprintf("unknown message type %s\n", msg.Operation))
+		zap.L().Error(fmt.Sprintf("unknown message type %s\n", msg.Operation))
 		return 0, errors.New(fmt.Sprintf("unknown message type %s\n", msg.Operation))
 	}
 
@@ -119,12 +119,12 @@ func (t *TerminalSession) Write(p []byte) (int, error) {
 	})
 
 	if err != nil {
-		logger.Error(fmt.Sprintf("write parse message err: %v\n", err))
+		zap.L().Error(fmt.Sprintf("write parse message err: %v\n", err))
 		return 0, err
 	}
 
 	if err := t.wsConn.WriteMessage(websocket.TextMessage, msg); err != nil {
-		logger.Error(fmt.Sprintf("write message err: %v\n", err))
+		zap.L().Error(fmt.Sprintf("write message err: %v\n", err))
 		return 0, err
 	}
 	return len(p), nil
@@ -145,7 +145,7 @@ func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request) {
 	podName := r.Form.Get("pod_name")
 	containerName := r.Form.Get("container_name")
 	cluster := r.Form.Get("cluster")
-	logger.Info("exec pod: %s, container: %s, namespace: %s, cluster: %s \n", podName, containerName, namespace, cluster)
+	zap.L().Info(fmt.Sprintf("exec pod: %s, container: %s, namespace: %s, cluster: %s \n", podName, containerName, namespace, cluster))
 
 	//获取集群的client
 	client, err := K8s.GetClient(cluster)
@@ -162,13 +162,13 @@ func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request) {
 	//实例化TerminalSession
 	pty, err := NewTerminalSession(w, r, nil)
 	if err != nil {
-		logger.Error("get pty failed: %v\n", err)
+		zap.L().Error("get pty failed: %v\n", zap.Error(err))
 		return
 	}
 
 	//处理关闭
 	defer func() {
-		logger.Info("close session.")
+		zap.L().Info("close session.")
 		pty.Close()
 	}()
 
@@ -185,7 +185,9 @@ func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request) {
 			Container: containerName,
 			Command:   []string{"/bin/bash"},
 		}, scheme.ParameterCodec)
-	logger.Info(req.URL())
+
+	msg, _ := json.Marshal(req.URL())
+	zap.L().Info(string(msg))
 
 	executor, err := remotecommand.NewSPDYExecutor(conf, "POST", req.URL())
 
@@ -203,7 +205,7 @@ func (t *terminal) WsHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		msg := fmt.Sprintf("Exec to pod error: %v \n", err)
-		logger.Error(msg)
+		zap.L().Error(msg)
 		//将报错发送给web终端，给用户看
 		pty.Write([]byte(msg))
 		//触发websocket的关闭

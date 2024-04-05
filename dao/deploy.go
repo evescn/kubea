@@ -3,7 +3,7 @@ package dao
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -44,7 +44,7 @@ func (*deploy) List(en, appName, repoName string, page, limit int) (*Deploys, er
 	}
 	tx := query.Count(&total)
 	if tx.Error != nil {
-		logger.Error("获取Build列表失败," + tx.Error.Error())
+		zap.L().Error("获取Build列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Build列表失败," + tx.Error.Error())
 	}
 
@@ -54,7 +54,7 @@ func (*deploy) List(en, appName, repoName string, page, limit int) (*Deploys, er
 		Order("id desc").
 		Find(&deployList)
 	if tx.Error != nil {
-		logger.Error("获取Build列表失败," + tx.Error.Error())
+		zap.L().Error("获取Build列表失败," + tx.Error.Error())
 		return nil, errors.New("获取Build列表失败," + tx.Error.Error())
 	}
 
@@ -73,7 +73,7 @@ func (*deploy) Get(deployId uint) (*model.Deploy, bool, error) {
 		return nil, false, nil
 	}
 	if tx.Error != nil {
-		logger.Error("查询Deploy失败," + tx.Error.Error())
+		zap.L().Error("查询Deploy失败," + tx.Error.Error())
 		return nil, false, errors.New("查询Deploy失败," + tx.Error.Error())
 	}
 
@@ -84,7 +84,7 @@ func (*deploy) Get(deployId uint) (*model.Deploy, bool, error) {
 func (*deploy) Add(d *model.Deploy) error {
 	tx := db.GORM.Create(&d)
 	if tx.Error != nil {
-		logger.Error("新增Deploy失败," + tx.Error.Error())
+		zap.L().Error("新增Deploy失败," + tx.Error.Error())
 		return errors.New("新增Deploy失败," + tx.Error.Error())
 	}
 
@@ -100,7 +100,7 @@ func (*deploy) Has(en string, appId uint) (*model.Deploy, bool, error) {
 	}
 
 	if tx.Error != nil {
-		logger.Error("根据环境和APPID查询Deploy失败," + tx.Error.Error())
+		zap.L().Error("根据环境和APPID查询Deploy失败," + tx.Error.Error())
 		return nil, false, errors.New("根据环境和APPID查询Deploy失败," + tx.Error.Error())
 	}
 
@@ -111,12 +111,12 @@ func (*deploy) Has(en string, appId uint) (*model.Deploy, bool, error) {
 func (*deploy) Update(d *model.Deploy) error {
 	tx := db.GORM.Model(&model.Deploy{}).Where("id = ?", d.ID).Updates(&d)
 	if tx.Error != nil {
-		logger.Error("更新Deploy失败," + tx.Error.Error())
+		zap.L().Error("更新Deploy失败," + tx.Error.Error())
 		return errors.New("更新Deploy失败," + tx.Error.Error())
 	}
 
 	if tx.Error != nil {
-		logger.Error("更新Deploy失败," + tx.Error.Error())
+		zap.L().Error("更新Deploy失败," + tx.Error.Error())
 		return errors.New("更新Deploy失败," + tx.Error.Error())
 	}
 
@@ -129,7 +129,7 @@ func (*deploy) Delete(deployId uint) error {
 	data.ID = deployId
 	tx := db.GORM.Delete(&data)
 	if tx.Error != nil {
-		logger.Error("删除Deploy失败," + tx.Error.Error())
+		zap.L().Error("删除Deploy失败," + tx.Error.Error())
 		return errors.New("删除Deploy失败," + tx.Error.Error())
 	}
 
@@ -144,7 +144,7 @@ func (*deploy) GetLog(deployId uint) (*model.DeployLog, bool, error) {
 		return nil, false, nil
 	}
 	if tx.Error != nil {
-		logger.Error("查询DeployLog失败," + tx.Error.Error())
+		zap.L().Error("查询DeployLog失败," + tx.Error.Error())
 		return nil, false, errors.New("查询DeployLog失败," + tx.Error.Error())
 	}
 
@@ -155,7 +155,7 @@ func (*deploy) GetLog(deployId uint) (*model.DeployLog, bool, error) {
 func (*deploy) UpdateLog(deployLog *model.DeployLog) error {
 	tx := db.GORM.Model(&model.DeployLog{}).Where("deploy_id = ?", deployLog.DeployId).Updates(&deployLog)
 	if tx.Error != nil {
-		logger.Error("更新DeployLog失败," + tx.Error.Error())
+		zap.L().Error("更新DeployLog失败," + tx.Error.Error())
 		return errors.New("更新DeployLog失败," + tx.Error.Error())
 	}
 
@@ -166,7 +166,7 @@ func (*deploy) UpdateLog(deployLog *model.DeployLog) error {
 func (*deploy) AddLog(deployLog *model.DeployLog) error {
 	tx := db.GORM.Create(&deployLog)
 	if tx.Error != nil {
-		logger.Error("新增DeployLog失败," + tx.Error.Error())
+		zap.L().Error("新增DeployLog失败," + tx.Error.Error())
 		return errors.New("新增DeployLog失败," + tx.Error.Error())
 	}
 

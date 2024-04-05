@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
 )
@@ -30,7 +30,7 @@ func (*subMenu) Add(m *model.SubMenu) error {
 	}
 
 	if has {
-		logger.Error("当前2级菜单数据已存在，请重新创建")
+		zap.L().Error("当前2级菜单数据已存在，请重新创建")
 		return errors.New("当前2级菜单数据已存在，请重新创建")
 	}
 
@@ -55,7 +55,7 @@ func (*subMenu) Delete(ID uint) error {
 	}
 
 	if has {
-		logger.Error("当前2级菜单页面关联子页面信息，请先删除关联信息")
+		zap.L().Error("当前2级菜单页面关联子页面信息，请先删除关联信息")
 		return errors.New("当前2级菜单页面关联子页面信息，请先删除关联信息")
 	}
 

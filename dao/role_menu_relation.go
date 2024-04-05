@@ -2,7 +2,7 @@ package dao
 
 import (
 	"errors"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/db"
 	"kubea/model"
 )
@@ -22,7 +22,7 @@ func (*roleMenuRelation) Get(roleID uint) ([]*model.RoleMenuRelation, error) {
 		Order("page_id").
 		Find(&roleMenuRelationList)
 	if tx.Error != nil {
-		logger.Error("根据RoleID查询RoleMenuRelation失败," + tx.Error.Error())
+		zap.L().Error("根据RoleID查询RoleMenuRelation失败," + tx.Error.Error())
 		return nil, errors.New("根据RoleID查询RoleMenuRelation失败," + tx.Error.Error())
 	}
 
@@ -33,7 +33,7 @@ func (*roleMenuRelation) Get(roleID uint) ([]*model.RoleMenuRelation, error) {
 func (*roleMenuRelation) Add(u *model.RoleMenuRelation) error {
 	tx := db.GORM.Create(&u)
 	if tx.Error != nil {
-		logger.Error("新增RoleMenuRelation信息失败," + tx.Error.Error())
+		zap.L().Error("新增RoleMenuRelation信息失败," + tx.Error.Error())
 		return errors.New("新增RoleMenuRelation信息失败," + tx.Error.Error())
 	}
 
@@ -44,7 +44,7 @@ func (*roleMenuRelation) Add(u *model.RoleMenuRelation) error {
 func (*roleMenuRelation) Update(u *model.RoleMenuRelation) error {
 	tx := db.GORM.Model(&model.RoleMenuRelation{}).Where("id = ?", u.ID).Updates(&u)
 	if tx.Error != nil {
-		logger.Error("更新RoleMenuRelation信息失败," + tx.Error.Error())
+		zap.L().Error("更新RoleMenuRelation信息失败," + tx.Error.Error())
 		return errors.New("更新RoleMenuRelation信息失败," + tx.Error.Error())
 	}
 
@@ -55,7 +55,7 @@ func (*roleMenuRelation) Update(u *model.RoleMenuRelation) error {
 func (*roleMenuRelation) Delete(u *model.RoleMenuRelation) error {
 	tx := db.GORM.Where("role_id = ? and page_id =? and sub_page_id =? and sub_sub_page_id =? ", u.RoleID, u.PageID, u.SubPageID, u.SubSubPageID).Delete(&u)
 	if tx.Error != nil {
-		logger.Error("删除RoleMenuRelation信息失败," + tx.Error.Error())
+		zap.L().Error("删除RoleMenuRelation信息失败," + tx.Error.Error())
 		return errors.New("删除RoleMenuRelation信息失败," + tx.Error.Error())
 	}
 

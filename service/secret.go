@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -44,7 +44,7 @@ func (c *secret) GetSecrets(client *kubernetes.Clientset, filterName, namespace 
 	// context.TODO()用于声明一个空的context上下文，用于List方法内设置这个请求的超时（源码），这里的常用用法
 	secretList, err := client.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Secret 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Secret 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Secret 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 d 结构体中获取到的 StatefulSet 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -76,7 +76,7 @@ func (c *secret) GetSecrets(client *kubernetes.Clientset, filterName, namespace 
 func (c *secret) GetSecretDetail(client *kubernetes.Clientset, secretName, namespace string) (secret *corev1.Secret, err error) {
 	secretDetail, err := client.CoreV1().Secrets(namespace).Get(context.TODO(), secretName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Secret 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Secret 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Secret 详情失败, %v\n", err))
 	}
 	return secretDetail, nil
@@ -86,7 +86,7 @@ func (c *secret) GetSecretDetail(client *kubernetes.Clientset, secretName, names
 func (c *secret) DeleteSecret(client *kubernetes.Clientset, secretName, namespace string) (err error) {
 	err = client.CoreV1().Secrets(namespace).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Secret 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 Secret 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Secret 失败, %v\n", err))
 	}
 	return nil
@@ -100,13 +100,13 @@ func (c *secret) UpdateSecret(client *kubernetes.Clientset, content, namespace s
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &secrets)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
 	_, err = client.CoreV1().Secrets(namespace).Update(context.TODO(), secrets, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 Secret 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 Secret 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 Secret 失败, %v\n", err))
 	}
 	return nil

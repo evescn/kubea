@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/dao"
 )
 
@@ -32,7 +32,7 @@ type Meta struct {
 
 func (*vueRouter) SetRouter(roleID uint) ([]*Permission, error) {
 	// 获取权限对应关系
-	//logger.Info("roleID: ", roleID)
+	//zap.L().Info("roleID: ", roleID)
 	// 超级管理员
 	if roleID == 1 {
 		return VueRouter.AdminRouter()
@@ -50,9 +50,9 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 		return nil, err
 	}
 
-	for _, item := range data {
-		fmt.Println(item)
-	}
+	//for _, item := range data {
+	//	fmt.Println(item)
+	//}
 
 	// 定义数据
 	var (
@@ -72,11 +72,11 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 			Icon:     menuData.Icon,
 			Children: nil,
 		}
-		//logger.Info("menuData: ", menuData)
+		//zap.L().Info("menuData: ", menuData)
 
 		// 遍历1级页面
 		subData, _, err := dao.SubMenu.GetP(menuData.ID)
-		//logger.Info("subData: ", subData)
+		//zap.L().Info("subData: ", subData)
 		if err != nil {
 			return nil, err
 		}
@@ -101,9 +101,9 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 
 			// 遍历2级页面
 			for _, subMenuData := range subData {
-				//logger.Info("------------------------")
-				//logger.Info("permissionData: ", permissionData)
-				//logger.Info("subData: ", subData)
+				//zap.L().Info("------------------------")
+				//zap.L().Info("permissionData: ", permissionData)
+				//zap.L().Info("subData: ", subData)
 				subSubData, _, err := dao.SubSubMenu.GetP(subMenuData.ID)
 				if err != nil {
 					return nil, err
@@ -123,7 +123,7 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 
 					// 插入数据
 					//permissionList = append(permissionList, permissionData)
-					//logger.Info("+++++++++++++++++++++++")
+					//zap.L().Info("+++++++++++++++++++++++")
 				} else {
 					subPermissionData = &Permission{
 						Path:     subMenuData.Path,
@@ -160,7 +160,7 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 // UserRouter 普通用户权限获取
 func (*vueRouter) UserRouter(roleID uint) ([]*Permission, error) {
 	// 获取权限对应关系
-	//logger.Info("roleID: ", roleID)
+	//zap.L().Info("roleID: ", roleID)
 	data, err := RoleMenuRelation.Get(roleID)
 	if err != nil {
 		return nil, err
@@ -188,7 +188,7 @@ func (*vueRouter) UserRouter(roleID uint) ([]*Permission, error) {
 				return nil, err
 			}
 			if !has {
-				logger.Error("当前Menu数据不存在")
+				zap.L().Error("当前Menu数据不存在")
 				return nil, errors.New("当前Menu数据不存在")
 			}
 
@@ -232,7 +232,7 @@ func (*vueRouter) UserRouter(roleID uint) ([]*Permission, error) {
 				return nil, err
 			}
 			if !has {
-				logger.Error("当前SubMenu数据不存在")
+				zap.L().Error("当前SubMenu数据不存在")
 				return nil, errors.New("当前SubMenu数据不存在")
 			}
 
@@ -276,7 +276,7 @@ func (*vueRouter) UserRouter(roleID uint) ([]*Permission, error) {
 				return nil, err
 			}
 			if !has {
-				logger.Error("当前SubMenu数据不存在")
+				zap.L().Error("当前SubMenu数据不存在")
 				return nil, errors.New("当前SubMenu数据不存在")
 			}
 

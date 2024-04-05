@@ -3,14 +3,14 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/release"
 	"io"
-	"kubea/config"
 	"kubea/dao"
 	"kubea/model"
+	"kubea/settings"
 	"mime/multipart"
 	"os"
 	"strconv"
@@ -57,7 +57,7 @@ func (*helmStore) ListReleases(actionConfig *action.Configuration, filterName st
 	client.Deployed = true
 	results, err := client.Run()
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取Release列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取Release列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取Release列表失败, %v\n", err))
 	}
 
@@ -78,7 +78,7 @@ func (*helmStore) DetailRelease(actionConfig *action.Configuration, release stri
 	client := action.NewGet(actionConfig)
 	data, err := client.Run(release)
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取Release详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取Release详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取Release详情失败, %v\n", err))
 	}
 	return data, nil
@@ -94,19 +94,19 @@ func (*helmStore) InstallRelease(actionConfig *action.Configuration, release, ch
 	client.Namespace = namespace
 	splitChart := strings.Split(chart, ".")
 	if splitChart[len(splitChart)-1] == "tgz" && !strings.Contains(chart, ":") {
-		chart = config.UploadPath + chart
+		chart = settings.Conf.UploadPath + chart
 	}
 
 	//加载chart文件，并给予文件内容生成k8s资源
 	chartRequested, err := loader.Load(chart)
 	if err != nil {
-		logger.Error(fmt.Sprintf("加载Chart文件失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("加载Chart文件失败, %v\n", err))
 		return errors.New(fmt.Sprintf("加载Chart文件失败, %v\n", err))
 	}
 	vals := make(map[string]interface{}, 0)
 	_, err = client.Run(chartRequested, vals)
 	if err != nil {
-		logger.Error(fmt.Sprintf("安装Release失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("安装Release失败, %v\n", err))
 		return errors.New(fmt.Sprintf("安装Release失败, %v\n", err))
 	}
 
@@ -118,7 +118,7 @@ func (*helmStore) UninstallRelease(actionConfig *action.Configuration, release s
 	client := action.NewUninstall(actionConfig)
 	_, err := client.Run(release)
 	if err != nil {
-		logger.Error(fmt.Sprintf("卸载Release失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("卸载Release失败, %v\n", err))
 		return errors.New(fmt.Sprintf("卸载Release失败, %v\n", err))
 	}
 	return nil
@@ -131,25 +131,25 @@ func (*helmStore) UploadChartFile(file multipart.File, header *multipart.FileHea
 	filename := header.Filename
 	t := strings.Split(filename, ".")
 	if t[len(t)-1] != "tgz" {
-		logger.Error("chart文件必须以.tgz结尾")
+		zap.L().Error("chart文件必须以.tgz结尾")
 		return errors.New("chart文件必须以.tgz结尾")
 	}
-	filePath := config.UploadPath + filename
+	filePath := settings.Conf.UploadPath + filename
 	_, err := os.Stat(filePath)
 	if os.IsExist(err) {
-		logger.Error("chart文件已存在")
+		zap.L().Error("chart文件已存在")
 		return errors.New("chart文件已存在")
 	}
 	out, err := os.Create(filePath)
 	if err != nil {
-		logger.Error(fmt.Sprintf("创建chart文件失败 %v\n", err))
+		zap.L().Error(fmt.Sprintf("创建chart文件失败 %v\n", err))
 		return errors.New(fmt.Sprintf("创建chart文件失败 %v\n", err))
 	}
 	defer out.Close()
 
 	_, err = io.Copy(out, file)
 	if err != nil {
-		logger.Error(fmt.Sprintf("创建chart文件失败2 %v\n", err))
+		zap.L().Error(fmt.Sprintf("创建chart文件失败2 %v\n", err))
 		return errors.New(fmt.Sprintf("创建chart文件失败2 %v\n", err))
 	}
 	return nil
@@ -163,17 +163,17 @@ func (*helmStore) ListCharts(name string, page, limit int) (*dao.Charts, error) 
 // DeleteChartFile chart 文件删除
 func (*helmStore) DeleteChartFile(chart string) error {
 	//路径拼接这种写法只支持mac或者linux，如果是windows，则要改成 filePath := dev-config.UploadPath + "\\" + chart
-	filePath := config.UploadPath + chart
+	filePath := settings.Conf.UploadPath + chart
 	_, err := os.Stat(filePath)
 	if err != nil || os.IsNotExist(err) {
-		logger.Error(fmt.Sprintf("chart文件不存在 %v\n", err))
+		zap.L().Error(fmt.Sprintf("chart文件不存在 %v\n", err))
 		return errors.New(fmt.Sprintf("chart文件不存在 %v\n", err))
 	}
 
 	// 直接删除
 	err = os.Remove(filePath)
 	if err != nil {
-		logger.Error(fmt.Sprintf("chart文件删除失败 %v\n", err))
+		zap.L().Error(fmt.Sprintf("chart文件删除失败 %v\n", err))
 		return errors.New(fmt.Sprintf("chart文件删除失败 %v\n", err))
 	}
 	return nil

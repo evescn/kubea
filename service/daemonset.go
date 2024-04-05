@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -46,7 +46,7 @@ func (d *daemonSet) GetDaemonSets(client *kubernetes.Clientset, filterName, name
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	dsList, err := client.AppsV1().DaemonSets(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 DaemonSet 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 DaemonSet 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 DaemonSet 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 d 结构体中获取到的 DaemonSet 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -78,7 +78,7 @@ func (d *daemonSet) GetDaemonSets(client *kubernetes.Clientset, filterName, name
 func (d *daemonSet) GetDaemonSetDetail(client *kubernetes.Clientset, dsName, namespace string) (ds *appsv1.DaemonSet, err error) {
 	dsDetail, err := client.AppsV1().DaemonSets(namespace).Get(context.TODO(), dsName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 DaemonSet 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 DaemonSet 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 DaemonSet 详情失败, %v\n", err))
 	}
 	return dsDetail, nil
@@ -88,7 +88,7 @@ func (d *daemonSet) GetDaemonSetDetail(client *kubernetes.Clientset, dsName, nam
 func (d *daemonSet) DeleteDaemonSet(client *kubernetes.Clientset, dsName, namespace string) (err error) {
 	err = client.AppsV1().DaemonSets(namespace).Delete(context.TODO(), dsName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 DaemonSet 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 DaemonSet 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 DaemonSet 失败, %v\n", err))
 	}
 	return nil
@@ -102,13 +102,13 @@ func (d *daemonSet) UpdateDaemonSet(client *kubernetes.Clientset, content, names
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &dss)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
 	_, err = client.AppsV1().DaemonSets(namespace).Update(context.TODO(), dss, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 DaemonSet 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 DaemonSet 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 DaemonSet 失败, %v\n", err))
 	}
 	return nil

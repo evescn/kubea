@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/wonderivan/logger"
-	"kubea/config"
+	"go.uber.org/zap"
 	"kubea/model"
+	"kubea/settings"
+	"time"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 	err    error
 )
 
-func Init() {
+func Init(cfg *settings.MySQLConfig) (err error) {
 	//判断是否已经初始化
 	if isInit {
 		return
@@ -25,19 +26,23 @@ func Init() {
 	//parseTime是查询结果是否自动解析为时间
 	//loc是Mysql的时区设置
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.DbUser,
-		config.DbPwd,
-		config.DbHost,
-		config.DbPort,
-		config.DbName)
+		cfg.User,
+		cfg.Password,
+		cfg.Host,
+		cfg.Port,
+		cfg.DbName)
 
-	GORM, err = gorm.Open(config.DbType, dsn)
+	GORM, err = gorm.Open(cfg.DbType, dsn)
+	if err != nil {
+		zap.L().Error("connect DB failed", zap.Error(err))
+		return err
+	}
 	//打印sql语句
-	GORM.LogMode(config.LogMode)
+	GORM.LogMode(cfg.LogMode)
 	//开启连接池
-	GORM.DB().SetMaxIdleConns(config.MaxIdleConns)
-	GORM.DB().SetMaxOpenConns(config.MaxOpenConns)
-	GORM.DB().SetConnMaxLifetime(config.MaxLifeTime)
+	GORM.DB().SetMaxIdleConns(cfg.MaxIdleConns)
+	GORM.DB().SetMaxOpenConns(cfg.MaxOpenConns)
+	GORM.DB().SetConnMaxLifetime(time.Duration(cfg.MaxLifeTime) * time.Second)
 
 	//isInit = true
 	GORM.AutoMigrate(
@@ -56,10 +61,11 @@ func Init() {
 		model.Role{},
 		model.RoleMenuRelation{},
 	)
-	logger.Info("数据库连接成功")
+	zap.L().Info("数据库连接成功")
+	return
 }
 
 func Close() error {
-	logger.Info("关闭数据库连接")
+	zap.L().Info("关闭数据库连接", zap.Error(err))
 	return GORM.Close()
 }

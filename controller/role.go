@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"kubea/model"
 	"kubea/service"
 	"net/http"
@@ -23,7 +23,7 @@ func (*role) List(c *gin.Context) {
 	// 绑定请求参数
 	//绑定参数
 	if err := c.Bind(params); err != nil {
-		logger.Error("Bind 请求参数失败：" + err.Error())
+		zap.L().Error("Bind 请求参数失败：" + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -78,7 +78,7 @@ func (*role) Add(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -113,7 +113,7 @@ func (*role) Update(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),
@@ -150,7 +150,7 @@ func (*role) Delete(c *gin.Context) {
 
 	//绑定参数
 	if err := c.ShouldBind(params); err != nil {
-		logger.Error("ShouldBind请求参数失败," + err.Error())
+		zap.L().Error("ShouldBind请求参数失败," + err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 90400,
 			"msg":  err.Error(),

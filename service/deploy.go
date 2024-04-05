@@ -3,10 +3,10 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
-	"kubea/config"
+	"go.uber.org/zap"
 	"kubea/dao"
 	"kubea/model"
+	"kubea/settings"
 	"kubea/utils"
 	"time"
 )
@@ -31,7 +31,8 @@ func (*deploy) Add(d *model.Deploy) error {
 		return errors.New("查询无此应用")
 	}
 
-	d.BuildUrl = fmt.Sprintf(config.JenkinsUrl, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
+	//d.BuildUrl = fmt.Sprintf(config.JenkinsUrl, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
+	d.BuildUrl = fmt.Sprintf(settings.Conf.CiCd.JenkinsUrl, data.RepoName, fmt.Sprintf("%s-%s", data.RepoName, data.AppName))
 	return dao.Deploy.Add(d)
 }
 
@@ -203,7 +204,7 @@ func (*deploy) getDuration(startTimeStr string) string {
 
 	startTime, err := time.ParseInLocation("2006-01-02 15:04:05", startTimeStr, loc)
 	if err != nil {
-		logger.Error("解析开始时间时出错:", err)
+		zap.L().Error(err.Error())
 		return ""
 	}
 
@@ -229,7 +230,7 @@ func (*deploy) LogInfo(deployId uint, content string) {
 	// 查日志
 	data, has, err := dao.Deploy.GetLog(deployId)
 	if err != nil {
-		logger.Error(err)
+		zap.L().Error("日志写入报错：", zap.Error(err))
 	}
 	// 若存在就修改
 	if has {
@@ -237,7 +238,7 @@ func (*deploy) LogInfo(deployId uint, content string) {
 		data.Log = logContent
 		err = dao.Deploy.UpdateLog(data)
 		if err != nil {
-			logger.Error(err)
+			zap.L().Error(err.Error())
 		}
 	} else {
 		// 若不存在就新增
@@ -248,7 +249,7 @@ func (*deploy) LogInfo(deployId uint, content string) {
 			Log:      logContent,
 		})
 		if err != nil {
-			logger.Error(err)
+			zap.L().Error(err.Error())
 		}
 	}
 

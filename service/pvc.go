@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -44,7 +44,8 @@ func (c *pvc) GetPvcs(client *kubernetes.Clientset, filterName, namespace string
 	// context.TODO()用于声明一个空的context上下文，用于List方法内设置这个请求的超时（源码），这里的常用用法
 	pvcList, err := client.CoreV1().PersistentVolumeClaims(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 PVC 列表失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 PVC 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 PVC 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 d 结构体中获取到的 StatefulSet 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -76,7 +77,7 @@ func (c *pvc) GetPvcs(client *kubernetes.Clientset, filterName, namespace string
 func (c *pvc) GetPvcDetail(client *kubernetes.Clientset, pvcName, namespace string) (pvc *corev1.PersistentVolumeClaim, err error) {
 	pvcDetail, err := client.CoreV1().PersistentVolumeClaims(namespace).Get(context.TODO(), pvcName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 PVC 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 PVC 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 PVC 详情失败, %v\n", err))
 	}
 	return pvcDetail, nil
@@ -86,7 +87,7 @@ func (c *pvc) GetPvcDetail(client *kubernetes.Clientset, pvcName, namespace stri
 func (c *pvc) DeletePvc(client *kubernetes.Clientset, pvcName, namespace string) (err error) {
 	err = client.CoreV1().PersistentVolumeClaims(namespace).Delete(context.TODO(), pvcName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 PVC 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 PVC 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 PVC 失败, %v\n", err))
 	}
 	return nil
@@ -99,13 +100,13 @@ func (c *pvc) UpdatePvc(client *kubernetes.Clientset, content, namespace string)
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &pvcs)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
 	_, err = client.CoreV1().PersistentVolumeClaims(namespace).Update(context.TODO(), pvcs, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 PVC 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 PVC 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 PVC 失败, %v\n", err))
 	}
 	return nil

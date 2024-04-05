@@ -6,12 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	"io"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"kubea/config"
+	"kubea/settings"
 )
 
 var Pod pod
@@ -50,7 +50,8 @@ func (p *pod) GetPods(client *kubernetes.Clientset, filterName, namespace string
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	podList, err := client.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 p 结构体中获取到的 Pod 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -82,7 +83,8 @@ func (p *pod) GetPods(client *kubernetes.Clientset, filterName, namespace string
 func (p *pod) GetPodDetail(client *kubernetes.Clientset, podName, namespace string) (pod *corev1.Pod, err error) {
 	pod, err = client.CoreV1().Pods(namespace).Get(context.TODO(), podName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
 	}
 	return pod, nil
@@ -92,7 +94,8 @@ func (p *pod) GetPodDetail(client *kubernetes.Clientset, podName, namespace stri
 func (p *pod) DeletePod(client *kubernetes.Clientset, podName, namespace string) (err error) {
 	err = client.CoreV1().Pods(namespace).Delete(context.TODO(), podName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Pod 失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("删除 Pod 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Pod 失败, %v\n", err))
 	}
 	return nil
@@ -106,13 +109,14 @@ func (p *pod) UpdatePod(client *kubernetes.Clientset, content, namespace string)
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &pods)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().
+			Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
 	_, err = client.CoreV1().Pods(namespace).Update(context.TODO(), pods, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 Pod 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 Pod 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 Pod 失败, %v\n", err))
 	}
 	return nil
@@ -135,7 +139,8 @@ func (p *pod) GetPodContainer(client *kubernetes.Clientset, podName, namespace s
 // GetPodLog 获取 Pod 中容器日志
 func (p *pod) GetPodLog(client *kubernetes.Clientset, containerName, podName, namespace string) (log string, err error) {
 	//设置日志的配置，容器名以及tail的行数
-	lineLimit := int64(config.PodLogTailLine)
+	//lineLimit := int64(config.PodLogTailLine)
+	lineLimit := int64(settings.Conf.PodLogTailLine)
 	option := &corev1.PodLogOptions{
 		Container: containerName,
 		TailLines: &lineLimit,
@@ -145,7 +150,7 @@ func (p *pod) GetPodLog(client *kubernetes.Clientset, containerName, podName, na
 	//发起request请求，返回一个ioReadCloser类型（等同于response.body）
 	podLogs, err := req.Stream(context.TODO())
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取PodLog失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取PodLog失败, %v\n", err))
 		return "", errors.New(fmt.Sprintf("获取PodLog失败, %v\n", err))
 	}
 	defer podLogs.Close()
@@ -153,7 +158,7 @@ func (p *pod) GetPodLog(client *kubernetes.Clientset, containerName, podName, na
 	buf := new(bytes.Buffer)
 	_, err = io.Copy(buf, podLogs)
 	if err != nil {
-		logger.Error(fmt.Sprintf("复制PodLog失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("复制PodLog失败, %v\n", err))
 		return "", errors.New(fmt.Sprintf("复制PodLog失败, %v\n", err))
 	}
 	return buf.String(), nil

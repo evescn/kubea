@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 )
 
 var JWTToken jwtToken
@@ -28,7 +28,7 @@ func (*jwtToken) ParseToken(tokenString string) (claims *CustomClaims, err error
 	})
 
 	if err != nil {
-		logger.Error("parse token failed", err)
+		zap.L().Error("parse token failed", zap.Error(err))
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 				return nil, errors.New("TokenMalformed")

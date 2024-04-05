@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -62,7 +62,7 @@ func (d *deployment) fromCells(cells []DataCell) []appsv1.Deployment {
 func (d *deployment) GetDeployments(client *kubernetes.Clientset, filterName, namespace string, limit, page int) (deploymentResp *DeploymentResp, err error) {
 	deploymentList, err := client.AppsV1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Deployment 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Deployment 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Deployment 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象
@@ -95,7 +95,7 @@ func (d *deployment) GetDeployments(client *kubernetes.Clientset, filterName, na
 func (d *deployment) GetDeploymentDetail(client *kubernetes.Clientset, deploymentName, namespace string) (deployment *appsv1.Deployment, err error) {
 	deploymentDetail, err := client.AppsV1().Deployments(namespace).Get(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取Deployment详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取Deployment详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取Deployment详情失败, %v\n", err))
 	}
 	return deploymentDetail, nil
@@ -109,13 +109,13 @@ func (d *deployment) UpdateDeployment(client *kubernetes.Clientset, content, nam
 	//反序列化成deployment对象
 	err = json.Unmarshal([]byte(content), &deploy)
 	if err != nil {
-		logger.Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新deployment
 	_, err = client.AppsV1().Deployments(namespace).Update(context.TODO(), deploy, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新 Deployment 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新 Deployment 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新 Deployment 失败, %v\n", err))
 	}
 	return nil
@@ -125,7 +125,7 @@ func (d *deployment) UpdateDeployment(client *kubernetes.Clientset, content, nam
 func (d *deployment) DeleteDeployment(client *kubernetes.Clientset, deploymentName, namespace string) (err error) {
 	err = client.AppsV1().Deployments(namespace).Delete(context.TODO(), deploymentName, metav1.DeleteOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("删除 Deployment 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 Deployment 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Deployment 失败, %v\n", err))
 	}
 	return nil
@@ -135,13 +135,13 @@ func (d *deployment) DeleteDeployment(client *kubernetes.Clientset, deploymentNa
 func (d *deployment) ScaleDeployment(client *kubernetes.Clientset, scaleNum int, deploymentName, namespace string) (replica int32, err error) {
 	scale, err := client.AppsV1().Deployments(namespace).GetScale(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
 		return 0, errors.New(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
 	}
 	scale.Spec.Replicas = int32(scaleNum)
 	updateScale, err := client.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, scale, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 		return 0, errors.New(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 	}
 	return updateScale.Spec.Replicas, nil
@@ -176,14 +176,14 @@ func (d *deployment) RestartDeployment(client *kubernetes.Clientset, deploymentN
 	//序列化成字符串
 	patchByte, err := json.Marshal(patchData)
 	if err != nil {
-		logger.Error(fmt.Sprintf("序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("序列化失败, %v\n", err))
 	}
 	//调用patch方法更新deployment
 	_, err = client.AppsV1().Deployments(namespace).Patch(context.TODO(), deploymentName,
 		"application/strategic-merge-patch+json", patchByte, metav1.PatchOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("重启Deployment失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("重启Deployment失败, %v\n", err))
 		return errors.New(fmt.Sprintf("重启Deployment失败, %v\n", err))
 	}
 	return nil
@@ -193,20 +193,20 @@ func (d *deployment) RestartDeployment(client *kubernetes.Clientset, deploymentN
 func (d *deployment) RestartDeployment2(client *kubernetes.Clientset, deploymentName, namespace string) (err error) {
 	scale, err := client.AppsV1().Deployments(namespace).GetScale(context.TODO(), deploymentName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
 		return errors.New(fmt.Sprintf("获取Deployment副本信息失败, %v\n", err))
 	}
 	scaleNum := scale.Spec.Replicas
 	scale.Spec.Replicas = int32(0)
 	_, err = client.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, scale, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 	}
 	scale.Spec.Replicas = scaleNum
 	_, err = client.AppsV1().Deployments(namespace).UpdateScale(context.TODO(), deploymentName, scale, metav1.UpdateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 		return errors.New(fmt.Sprintf("更新Deployment副本信息失败, %v\n", err))
 	}
 	return nil
@@ -312,7 +312,7 @@ func (d *deployment) CreateDeployment(client *kubernetes.Clientset, data *Deploy
 	//创建deployment
 	_, err = client.AppsV1().Deployments(data.Namespace).Create(context.TODO(), deploymentData, metav1.CreateOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("创建 Deployment 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("创建 Deployment 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("创建 Deployment 失败, %v\n", err))
 	}
 	return nil

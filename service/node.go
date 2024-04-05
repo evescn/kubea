@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -42,7 +42,7 @@ func (n *node) fromCells(cells []DataCell) []corev1.Node {
 func (n *node) GetNodes(client *kubernetes.Clientset, filterName string, limit, page int) (nodesResp *NodesResp, err error) {
 	nodeList, err := client.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Node 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Node 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Node 列表失败, %v\n", err))
 	}
 	selectableData := &dataSelector{
@@ -74,7 +74,7 @@ func (n *node) GetNodes(client *kubernetes.Clientset, filterName string, limit, 
 func (n *node) GetNodeDetail(client *kubernetes.Clientset, nodeName string) (node *corev1.Node, err error) {
 	node, err = client.CoreV1().Nodes().Get(context.TODO(), nodeName, metav1.GetOptions{})
 	if err != nil {
-		logger.Error(fmt.Sprintf("获取 Node 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Node 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Node 详情失败, %v\n", err))
 	}
 	return node, nil
