@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"go.uber.org/zap"
 	"kubea/dao"
 )
@@ -135,7 +134,7 @@ func (*vueRouter) AdminRouter() ([]*Permission, error) {
 
 					// 遍历3级页面
 					for _, subSubMenuData := range subSubData {
-						fmt.Println("subSubData: ", subSubData)
+						//fmt.Println("subSubData: ", subSubData)
 						// 没有4级页面
 						childData := &Child{
 							Path: subSubMenuData.Path,

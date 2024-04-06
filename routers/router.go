@@ -24,7 +24,7 @@ func Setup() *gin.Engine {
 	// 跨域中间件
 	r.Use(middle.Cors())
 	// JWT登陆验证中间件
-	//r.Use(middle.JWTAuth())
+	r.Use(middle.JWTAuth())
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

@@ -44,8 +44,7 @@ func (c *configmap) GetConfigMaps(client *kubernetes.Clientset, filterName, name
 	// context.TODO()用于声明一个空的context上下文，用于List方法内设置这个请求的超时（源码），这里的常用用法
 	cmList, err := client.CoreV1().ConfigMaps(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("获取 ConfigMap 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 ConfigMap 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 ConfigMap 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 d 结构体中获取到的 StatefulSet 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能

@@ -42,8 +42,7 @@ func (p *pv) fromCells(cells []DataCell) []corev1.PersistentVolume {
 func (p *pv) GetPvs(client *kubernetes.Clientset, filterName string, limit, page int) (pvsResp *PvsResp, err error) {
 	pvList, err := client.CoreV1().PersistentVolumes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 PV 列表失败, %v\n", err))
 	}
 	selectableData := &dataSelector{

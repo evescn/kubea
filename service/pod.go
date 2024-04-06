@@ -50,8 +50,7 @@ func (p *pod) GetPods(client *kubernetes.Clientset, filterName, namespace string
 	//metav1.ListOptions{}用于过滤List数据，如使用label，field等
 	podList, err := client.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Pod 列表失败, %v\n", err))
 	}
 	//实例化dataSelector对象，把 p 结构体中获取到的 Pod 列表转化为 dataSelector 结构体，方便使用 dataSelector 结构体中 过滤，排序，分页功能
@@ -83,8 +82,7 @@ func (p *pod) GetPods(client *kubernetes.Clientset, filterName, namespace string
 func (p *pod) GetPodDetail(client *kubernetes.Clientset, podName, namespace string) (pod *corev1.Pod, err error) {
 	pod, err = client.CoreV1().Pods(namespace).Get(context.TODO(), podName, metav1.GetOptions{})
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
 		return nil, errors.New(fmt.Sprintf("获取 Pod 详情失败, %v\n", err))
 	}
 	return pod, nil
@@ -94,8 +92,7 @@ func (p *pod) GetPodDetail(client *kubernetes.Clientset, podName, namespace stri
 func (p *pod) DeletePod(client *kubernetes.Clientset, podName, namespace string) (err error) {
 	err = client.CoreV1().Pods(namespace).Delete(context.TODO(), podName, metav1.DeleteOptions{})
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("删除 Pod 失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("删除 Pod 失败, %v\n", err))
 		return errors.New(fmt.Sprintf("删除 Pod 失败, %v\n", err))
 	}
 	return nil
@@ -109,8 +106,7 @@ func (p *pod) UpdatePod(client *kubernetes.Clientset, content, namespace string)
 	//反序列化成pod对象
 	err = json.Unmarshal([]byte(content), &pods)
 	if err != nil {
-		zap.L().
-			Error(fmt.Sprintf("反序列化失败, %v\n", err))
+		zap.L().Error(fmt.Sprintf("反序列化失败, %v\n", err))
 		return errors.New(fmt.Sprintf("反序列化失败, %v\n", err))
 	}
 	//更新pod
