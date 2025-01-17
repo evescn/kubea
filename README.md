@@ -31,7 +31,7 @@ $ docker push harbor.xxx.cn/devops/kubea:v1.1
 ```shell
 # 第二种打包 Docker 镜像
 $ chmod a+x ./build
-$ ./build 1 # 版本号信息
+$ ./build 1 dev # 版本号信息 环境
 ```
 
 ## 2. 服务部署
@@ -53,20 +53,20 @@ $ docker run -d \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: site-navigation
+  name: kubea
   namespace: devops
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: site-navigation
+      app: kubea
   template:
     metadata:
       labels:
-        app: site-navigation
+        app: kubea
     spec:
       containers:
-      - name: site-navigation
+      - name: kubea
         image: harbor.xxx.cn/devops/kubea:v1.0
         imagePullPolicy: Always
         ports:
@@ -77,7 +77,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: site-navigation
+  name: kubea
   namespace: devops
 spec:
   ports:
@@ -86,7 +86,7 @@ spec:
     targetPort: 8080
     nodePort: 30080
   selector:
-    app: site-navigation
+    app: kubea
   type: NodePort
 ```
 
