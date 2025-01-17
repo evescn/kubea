@@ -30,8 +30,8 @@ $ docker push harbor.xxx.cn/devops/kubea:v1.1
 
 ```shell
 # 第二种打包 Docker 镜像
-$ chmod a+x ./build
-$ ./build 1 dev # 版本号信息 环境
+$ chmod a+x ./build.sh
+$ ./build.sh 1 dev # 版本号信息 环境
 ```
 
 ## 2. 服务部署
